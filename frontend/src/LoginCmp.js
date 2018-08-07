@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import common from './common.js';
-
+import './App.css'
 class LoginCmp extends Component {
 
     constructor() {
@@ -67,11 +67,13 @@ class LoginCmp extends Component {
             this.props.show ?
                 <div>
                     <div>
-                        <h4>Login:</h4>
-                        <form onSubmit={this.handleSubmitLogin}>
-                            <div>Username: <input type="text" value={this.state.username} onChange={this.handleInputUsername} /></div>
-                            <div>Password: <input type="password" value={this.state.password} onChange={this.handleInputPassword} /></div>
-                            <div><input type="submit" value="Send" /></div>
+                        <form className='logInForm' onSubmit={this.handleSubmitLogin}>
+                            <h4>Login:</h4>
+                            <div className='logInLabel'>Username:</div>
+                            <input className='logInInput' type="text" value={this.state.username} onChange={this.handleInputUsername} />
+                            <div className='logInLabel'>Password:</div>
+                            <input className='logInInput' type="password" value={this.state.password} onChange={this.handleInputPassword} />
+                            <input className='logInButton' type="submit" value="Send" />
                         </form>
                     </div>
                     <div>{this.state.message}</div>
