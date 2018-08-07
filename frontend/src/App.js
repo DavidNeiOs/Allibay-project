@@ -175,7 +175,7 @@ class App extends Component {
               <a className='links'>Shoes</a>
               <a className='links'>Watches</a>
             </div>
-            <RandomItems history={routeProps.history} randomItems={this.state.randomItems} setItemToDetail={this.setItemToDetail}/>
+            <RandomItems history={routeProps.history} randomItems={this.state.randomItems} setItemToDetailFunction={this.setItemToDetail}/>
             <div className='asideJoin'>
               <img className='avatar' src={'/Images/Icons/avatar.png'} />
               <button className='regButton'> Sign Up </button>
@@ -191,6 +191,7 @@ class App extends Component {
             : 
             null
           }
+          <ItemDetailCmp item={this.state.item} setItemToCartFunction={this.setItemToCart} />
         </div>
     )
   }

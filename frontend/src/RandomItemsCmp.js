@@ -11,7 +11,7 @@ class RandomItems extends Component {
   buttonHandler(item, evt) {
     evt.preventDefault();
     //this.props.history.push('/item/' + itemID);
-    this.props.setItemToDetail(item.itemID);
+    this.props.setItemToDetailFunction(item.itemID);
   }
   render() {
     return (
