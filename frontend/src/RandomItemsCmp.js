@@ -22,9 +22,10 @@ class RandomItems extends Component {
       super(props)
       this.buttonHandler = this.buttonHandler.bind(this)
   }
-  buttonHandler(itemID, evt) {
+  buttonHandler(item, evt) {
     evt.preventDefault();
-    this.props.history.push('/item/' + itemID);
+    //this.props.history.push('/item/' + itemID);
+    this.props.setItemToDetailFunction(item.itemID);
   }
   render() {
     return (
@@ -32,9 +33,12 @@ class RandomItems extends Component {
         {this.props.randomItems.map(item => {
           return (
             <Item> 
-              <div>{item.description}</div>
+              <div><img src={"/Images/items/" + item.category+"/"+item.image} height="50px" width="50px" /></div>
+              <div>{item.blurb}</div>
+              <div>CAD $ {item.price}</div>
               <Button onClick={(evt) => {
-                this.buttonHandler(item.itemID, evt)
+                //this.buttonHandler(item.itemID, evt)
+                this.buttonHandler(item, evt)
               }}>
                 See Item
               </Button>

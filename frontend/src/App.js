@@ -8,6 +8,7 @@ import SignUpCmp from './SignUpCmp.js';
 import LoginCmp from './LoginCmp.js';
 import SellerItemCmp from './SellerItemCmp.js';
 import PurchaseItemCmp from './PurchaseItemCmp.js';
+import ItemDetailCmp from './ItemDetailCmp.js'
 // end -----------------------------------------------------------
 
 // css Components ------------------------------------------------
@@ -26,24 +27,27 @@ class App extends Component {
   constructor() {
     super()
     this.state = {
-      items: [{ description: 'pencil', price: 500, itemID: 1 },
-      { description: 'pen', price: 800, itemID: 2 },
-      { description: 'car', price: 800, itemID: 3 },
-      { description: 'dog', price: 700, itemID: 4 },
-      { description: 'cat', price: 600, itemID: 5 },
-      { description: 'dog1', price: 800, itemID: 6 },
-      { description: 'dog2', price: 800, itemID: 7 },
-      { description: 'dog3', price: 800, itemID: 8 },
-      { description: 'dog4', price: 800, itemID: 9 },
-      { description: 'dog5', price: 800, itemID: 10 },
-      { description: 'dog6', price: 800, itemID: 11 },
-      { description: 'dog7', price: 800, itemID: 12 }
+      items: [
+      { itemID: 1 , blurb: 'shoes nike', description: 'lorem ipsum ...', price: 500, category: 'shoes', image:'tennisNikeRed.png'},
+      { itemID: 2 , blurb: 'shoes nike', description: 'lorem ipsum ...', price: 800, category: 'shoes', image:'tennisNikeRed.png'},
+      { itemID: 3 , blurb: 'shoes nike', description: 'lorem ipsum ...', price: 800, category: 'shoes', image:'tennisNikeRed.png'},
+      { itemID: 4 , blurb: 'shoes nike', description: 'lorem ipsum ...', price: 700, category: 'shoes', image:'tennisNikeRed.png'},
+      { itemID: 5, blurb: 'shoes nike', description: 'lorem ipsum ...', price: 600, category: 'shoes', image:'tennisNikeRed.png'},
+      { itemID: 6 , blurb: 'shoes nike', description: 'lorem ipsum ...', price: 800, category: 'shoes', image:'tennisNikeRed.png'},
+      { itemID: 7 , blurb: 'shoes nike', description: 'lorem ipsum ...', price: 800, category: 'shoes', image:'tennisNikeRed.png'},
+      { itemID: 8 , blurb: 'shoes nike', description: 'lorem ipsum ...', price: 800, category: 'shoes', image:'tennisNikeRed.png'},
+      { itemID: 9 , blurb: 'shoes nike', description: 'lorem ipsum ...', price: 800, category: 'shoes', image:'tennisNikeRed.png'},
+      { itemID: 10 , blurb: 'shoes nike', description: 'lorem ipsum ...', price: 800, category: 'shoes', image:'tennisNikeRed.png'},
+      { itemID: 11 , blurb: 'shoes nike', description: 'lorem ipsum ...', price: 800, category: 'shoes', image:'tennisNikeRed.png'},
+      { itemID: 12 , blurb: 'shoes nike', description: 'lorem ipsum ...', price: 800, category: 'shoes', image:'tennisNikeRed.png' }
       ],  // this list contains all the items
       randomItems: [], // this list contains 10 random items from the items list
       categories: [],
       signUpSuccess: false,
       userID: null, //this value chang when the login is success
-      userName: ''
+      userName: '',
+      item: null,
+      cartUserItems: []
     }
     this.getItems = this.getItems.bind(this)
     this.getRandomItems = this.getRandomItems.bind(this)
@@ -52,6 +56,8 @@ class App extends Component {
     this.setSignUpSuccess = this.setSignUpSuccess.bind(this);
     this.setLoginSuccess = this.setLoginSuccess.bind(this);
     this.doLogout = this.doLogout.bind(this);
+    this.setItemToDetail = this.setItemToDetail.bind(this);
+    this.setItemToCart = this.setItemToCart.bind(this);
   }
   /*
     This function will load all the items from the server
@@ -123,6 +129,17 @@ class App extends Component {
     this.setState({ userID: userId, userName: username })
   }
 
+  setItemToDetail(itemID) {
+    let matchingItem = this.state.items.filter(item => item.itemID === itemID);
+    this.setState({ item: matchingItem })
+  }
+
+  setItemToCart(item) { 
+    let carItems = this.state.cartUserItems;  
+    carItems.push(item);
+    this.setState({ cartUserItems: carItems })
+  }
+
   doLogout(){
     //TODO: REMOVE THE COOKIE!!!
     let bodyInfo = {username :  this.state.userName} ;
@@ -163,10 +180,11 @@ class App extends Component {
               <Link>Man</Link>
               <Link>Shoes</Link>
               <Link>Watches</Link>
-            </Aside>
-            <RandomItems history={routeProps.history} randomItems={this.state.randomItems} />
-            {!this.state.signUpSuccess ? (<SignUpCmp show={true} setSignUpSuccessFunction={this.setSignUpSuccess} />) : (<div></div>)}
-            {!this.state.userID ? (<LoginCmp show={true} setLoginSuccessFunction={this.setLoginSuccess} />) : (<div></div>)}            
+            </Aside>            
+            <RandomItems history={routeProps.history} randomItems={this.state.randomItems} setItemToDetailFunction={this.setItemToDetail} />
+            {!!this.state.signUpSuccess ? (<SignUpCmp show={true} setSignUpSuccessFunction={this.setSignUpSuccess} />) : (<div></div>)}
+            {!!this.state.userID ? (<LoginCmp show={true} setLoginSuccessFunction={this.setLoginSuccess} />) : (<div></div>)}            
+            <ItemDetailCmp item={this.state.item} setItemToCartFunction={this.setItemToCart} />
             <Aside join>
               <Logo src={'/Images/Icons/avatar.png'} avatar />
               <Button register> Sign Up </Button>
