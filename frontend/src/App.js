@@ -1,135 +1,137 @@
 import React, { Component } from 'react';
-import logo from './logo.svg'
-import './App.css';
-const assert = require('assert')
-let itemsBought = {}
+import RandomItems from './RandomItemsCmp'
+import {BrowserRouter, Route} from 'react-router-dom'
+import styled, { css } from 'styled-components'
+
+
+// css Components ------------------------------------------------
+import MainBar from './components/MainBar'
+import Logo from './components/Logo'
+import Label from './components/Label'
+import ShoppingCart from './components/ShoppingCart'
+import Wrapper from './components/Wrapper'
+import Aside from './components/Aside'
+import SearchForm from './components/SearchForm'
+import Link from './components/Link'
+import Button from './components/Button'
+// end ------------------------------------------------------------
 
 class App extends Component {
   constructor () {
     super()
+    this.state = {
+      items: [],  // this list contains all the items
+      randomItems: [], // this list contains 10 random items from the items list
+      categories: []
+    }
+    this.getItems = this.getItems.bind(this)
+    this.getRandomItems = this.getRandomItems.bind(this)
+    this.renderMain = this.renderMain.bind(this)
+    this.renderItem = this.renderItem.bind(this)
     
   }
-  
-
-   // map that keeps track of all the items a user has bought
-
   /*
-  Use this function to generate a new UID every time a user creates an account.
-  
-  genUID () {
-    return Math.floor(Math.random() * 100000000)
-  }
-
-  putItemsBought (userID, value) {
-    itemsBought[userID] = value
-  }
-
-  getItemsBought (userID) {
-    var ret = itemsBought[userID]
-    if (ret === undefined) {
-      return null
-    }
-    return ret
-  }
-
-  /*
-  initializeUserIfNeeded adds the UID to our database unless it's already there
-  parameter: [uid] the UID of the user.
-  returns: undefined
-  
-  initializeUserIfNeeded (uid) {
-    let items = getItemsBought[uid]
-    if (items === null) {
-      putItemsBought(uid, [])
-    }
-  }
-
-  /*
-  allItemsBought returns the IDs of all the items bought by a buyer
-    parameter: [buyerID] The ID of the buyer
-    returns: an array of listing IDs
-  
-  allItemsBought (buyerID) {
-    return itemsBought[buyerID]
-  }
-
-  /*
-  createListing adds a new listing to our global state.
-  This function is incomplete. You need to complete it.
-    parameters:
-      [sellerID] The ID of the seller
-      [price] The price of the item
-      [blurb] A blurb describing the item
-    returns: The ID of the new listing
-  
-  createListing (sellerID, price, blurb) {
-
-  }
-
-  /*
-  getItemDescription returns the description of a listing
-    parameter: [listingID] The ID of the listing
-    returns: An object containing the price and blurb properties.
-  
-  getItemDescription (listingID) {
-
-  }
-
-  /*
-  buy changes the global state.
-  Another buyer will not be able to purchase that listing
-  The listing will no longer appear in search results
-  The buyer will see the listing in his history of purchases
-  The seller will see the listing in his history of items sold
-    parameters:
-     [buyerID] The ID of buyer
-     [sellerID] The ID of seller
-     [listingID] The ID of listing
-    returns: undefined
-  
-  buy (buyerID, sellerID, listingID) {
-
-  }
-
-  /*
-  allItemsSold returns the IDs of all the items sold by a seller
-    parameter: [sellerID] The ID of the seller
-    returns: an array of listing IDs
-  
-  allItemsSold (sellerID) {
-
-  }
-
-  /*
-  allListings returns the IDs of all the listings currently on the market
-  Once an item is sold, it will not be returned by allListings
-    returns: an array of listing IDs
-  
-  allListings () {
-
-  }
-
-  /*
-  searchForListings returns the IDs of all the listings currently on the market
-  Once an item is sold, it will not be returned by searchForListings
-    parameter: [searchTerm] The search string matching listing descriptions
-    returns: an array of listing IDs
-  
-  searchForListings (searchTerm) {
-
-  }
+    This function will load all the items from the server
+    it expects as a response the array with all items
   */
+  getItems() {
+    fetch('/getAllItems')
+      .then(response => response.text())
+      .then(responseBody => {
+        let parsedBody = JSON.parse(responseBody);
+        this.setState({items: parsedBody.items});
+        this.getRandomItems();
+      })
+  }
+  /**
+   * this function will get ten random items from array of items
+   * this items will be store in the state.randomItems
+   */
+  
+   getRandomItems() {
+    let rItems = [] // this will be the array that will be assigned to state.randomItems
+    for(let i = 0; i < 8; i++) {
+      let index = Math.floor(Math.random() * this.state.items.length);
+      rItems.push(this.state.items[index]);
+    }
+    this.setState({randomItems: rItems});
+  }
+
+  /**
+   * function formats an item to be shown
+   * @param {the item which 'button' was clicked} item 
+   */
+  formatItem(item) {
+    return (
+      <div>
+        <div> {item.description} </div>
+        <div> {item.price} </div>
+        <div> {item.itemID} </div>
+      </div>
+    )
+  }
+  
+  /**
+   * this function will check the url to get the itemID
+   * and then will look in the item's database
+   * when foun we will make it appear on screen with the format
+   * of formatItem
+   */
+  renderItem(routerData) {
+    let itemIdSupplied = parseInt(routerData.match.params.itemID);
+    let matchingItem = this.state.items.filter(item => item.itemID === itemIdSupplied);
+    if(matchingItem.length === 0) {
+      return <div>invalid item code</div> // item not found
+    }
+    // item found
+    return this.formatItem(matchingItem[0])  
+  }
+  
+  componentDidMount() {
+    this.getItems();
+  }
+
+  renderMain(routeProps) {
+    return (
+      this.state.randomItems.length === 0 ?
+        <div>
+          loading
+        </div>
+      :    
+        <div className="App">
+          <MainBar>
+            <Logo src={'/Images/logo_small.png'}/>
+            <SearchForm />
+            <Label user> username </Label>
+            <ShoppingCart />
+          </MainBar>
+          <Wrapper>
+            <Aside>
+              <Link>Woman</Link>
+              <Link>Man</Link>
+              <Link>Shoes</Link>
+              <Link>Watches</Link>
+            </Aside>
+            <RandomItems history={routeProps.history} randomItems={this.state.randomItems} />
+            <Aside join>
+              <Logo src={'/Images/Icons/avatar.png'} avatar />
+              <Button register> Sign Up </Button>
+              <Label> Already have an account ?</Label>
+              <Button register> Log In </Button>
+            </Aside>
+          </Wrapper>
+        </div>
+    )
+  }
+  
   render() {
     return (
-       <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
-        </header>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
-      </div>
+      <BrowserRouter>
+        <div>
+          <Route path='/' exact render={this.renderMain} />
+          <Route path='/item/:itemID' render={this.renderItem} />
+        </div>
+      </BrowserRouter>
     );
   }
 }
