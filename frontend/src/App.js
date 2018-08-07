@@ -136,20 +136,18 @@ class App extends Component {
   doLogout(){
     //TODO: REMOVE THE COOKIE!!!
     let bodyInfo = {username :  this.state.userName} ;
-           fetch('/logout', {
-                method: 'POST',
-                body: JSON.stringify(bodyInfo)
-            }).then(resp => resp.text())
-                .then(respBody => {
-                    let respBodyParser = JSON.parse(respBody);
-
-                    //if logout success
-                    if (respBodyParser.success) {
-
-                      //update state
-                      this.setState({ userID: null, userName:''})  
-                    }                    
-              })
+    fetch('/logout', {
+      method: 'POST',
+      body: JSON.stringify(bodyInfo)
+    }).then(resp => resp.text())
+      .then(respBody => {
+          let respBodyParser = JSON.parse(respBody);
+          //if logout success
+          if (respBodyParser.success) {
+            //update state
+            this.setState({ userID: null, userName:''})  
+          }                    
+      })
 
   }
   
@@ -186,9 +184,13 @@ class App extends Component {
             </div>
             
           </div>
-          <div className='li-modal'>
-            <LoginCmp show={this.state.loginClicked} setLoginSuccessFunction={this.setLoginSuccess} />
-          </div>
+          { this.state.loginClicked ? 
+            (<div className='li-modal'>
+              <LoginCmp show={this.state.loginClicked} setLoginSuccessFunction={this.setLoginSuccess} />
+            </div>) 
+            : 
+            null
+          }
         </div>
     )
   }

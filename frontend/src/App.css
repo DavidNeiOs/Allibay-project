@@ -44,9 +44,6 @@
 }
 
 .logInForm {
-    position: absolute;
-    top: 10%;
-    right: 35%;
     width: 20vw;
     height: 30vh;
     background-color: black;
@@ -54,8 +51,15 @@
     flex-direction: column;
     text-align: center;
     color: white;
+    position: relative;
 }
-
+.close {
+  position: absolute;
+  font-size: 3vh;
+  right: 0;
+  transform: rotate(45deg);
+  cursor: pointer;
+}
 .logInLabel {
   margin-top: 1vh;
   margin-left: 1vw;
@@ -154,15 +158,19 @@
     height: 3vh;
 }
 
-.bg-modal {
+.li-modal {
   width: 100%;
   height: 100%;
   background-color: rgba(0,0,0,0.8);
   position: absolute;
-  top: 0;
-  flex-direction: columns;
+  top: 0; 
+  justify-content: center;
 }
-
+.modal-content {
+  position: relative;
+  top : 20%;
+  left: 40%;
+}
 .logout {
   cursor: pointer;
 }

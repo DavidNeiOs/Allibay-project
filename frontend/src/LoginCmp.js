@@ -65,17 +65,16 @@ class LoginCmp extends Component {
     render() {
         return (
             this.props.show ?
-                <div>
-                    <div>
-                        <form className='logInForm' onSubmit={this.handleSubmitLogin}>
-                            <h4>Login:</h4>
-                            <div className='logInLabel'>Username:</div>
-                            <input className='logInInput' type="text" value={this.state.username} onChange={this.handleInputUsername} />
-                            <div className='logInLabel'>Password:</div>
-                            <input className='logInInput' type="password" value={this.state.password} onChange={this.handleInputPassword} />
-                            <input className='logInButton' type="submit" value="Send" />
-                        </form>
-                    </div>
+                <div className='modal-content'>
+                    <form className='logInForm' onSubmit={this.handleSubmitLogin}>
+                        <div className='close'>+</div>
+                        <h4>Login:</h4>
+                        <div className='logInLabel'>Username:</div>
+                        <input className='logInInput' type="text" value={this.state.username} onChange={this.handleInputUsername} />
+                        <div className='logInLabel'>Password:</div>
+                        <input className='logInInput' type="password" value={this.state.password} onChange={this.handleInputPassword} />
+                        <input className='logInButton' type="submit" value="Send" />
+                    </form>
                     <div>{this.state.message}</div>
                 </div> : null
         )

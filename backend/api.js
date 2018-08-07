@@ -26,13 +26,6 @@ app.get('/itemsBought', (req, res) => {
     res.send(JSON.stringify(alibay.getItemsBought(uid)));
 });
 
-<<<<<<< HEAD
-app.get('/getAllItems', (req, res) => {
-    res.send(JSON.stringify({items: serverState.items, ans: 'success'}))
-})
-
-app.listen(4000, () => console.log('Listening on port 4000!'))
-=======
 app.get('/soldItemsHistory', (req,res) => {
     let uid = req.query.uid;
     //to finish & test tuesday morning
@@ -148,4 +141,3 @@ function getUserInfoFromFile(mesBody) {
 }
 
 app.listen(3000, () => console.log('Listening on port 3000!'))
->>>>>>> a77f6d0d762624b71efbac446c1f7af99c2ff790
