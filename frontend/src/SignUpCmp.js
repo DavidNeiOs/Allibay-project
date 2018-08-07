@@ -70,8 +70,8 @@ class SignUpCmp extends Component {
 
         if (this.validateInputs()) {
 
-            let bodyInfo = { username: this.state.username, password: this.state.password, contact: {address: this.state.address, postalcode: this.state.postalcode, phonenumber: this.state.phonenumber} };
-            /*fetch('/signUp', {
+            let bodyInfo = { username: this.state.username, password: this.state.password, contact: {address: this.state.address, postalcode: this.state.postalcode, phonenumber: this.state.phonenumber, email:'linda@gmail.com'} };
+            fetch('/signUp', {
                 method: 'POST',
                 body: JSON.stringify(bodyInfo)
             }).then(resp => resp.text())
@@ -79,7 +79,7 @@ class SignUpCmp extends Component {
                     let respBodyParser = JSON.parse(respBody);
 
                     //confirm sucess to app main
-                    this.props.setSignUpSuccessFunction(respBodyParser.success);
+                    //this.props.setSignUpSuccessFunction(respBodyParser.success);
 
                     //update state and rerender
                     this.setState({ signup: respBodyParser.success, message: respBodyParser.message})
