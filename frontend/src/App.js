@@ -51,6 +51,7 @@ class App extends Component {
     this.renderItem = this.renderItem.bind(this)
     this.setSignUpSuccess = this.setSignUpSuccess.bind(this);
     this.setLoginSuccess = this.setLoginSuccess.bind(this);
+    this.doLogout = this.doLogout.bind(this);
   }
   /*
     This function will load all the items from the server
@@ -122,6 +123,26 @@ class App extends Component {
     this.setState({ userID: userId, userName: username })
   }
 
+  doLogout(){
+    //TODO: REMOVE THE COOKIE!!!
+    let bodyInfo = {username :  this.state.userName} ;
+           fetch('/logout', {
+                method: 'POST',
+                body: JSON.stringify(bodyInfo)
+            }).then(resp => resp.text())
+                .then(respBody => {
+                    let respBodyParser = JSON.parse(respBody);
+
+                    //if logout success
+                    if (respBodyParser.success) {
+
+                      //update state
+                      this.setState({ userID: null, userName:''})  
+                    }                    
+              })
+
+  }
+  
   renderMain(routeProps) {
     return (
       this.state.randomItems.length === 0 ?
@@ -133,7 +154,7 @@ class App extends Component {
           <MainBar>
             <Logo src={'/Images/logo_small.png'} />
             <SearchForm />
-            <Label user>{this.state.userName}</Label>
+            <Label user>{this.state.userName}{this.state.userName !== '' ? (<img  width="20px" height="20px" src={'/Images/Icons/logout.png'} onClick={this.doLogout} />) : (<div></div>)}</Label>
             <ShoppingCart />
           </MainBar>
           <Wrapper>
