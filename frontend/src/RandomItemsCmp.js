@@ -8,9 +8,10 @@ class RandomItems extends Component {
       super(props)
       this.buttonHandler = this.buttonHandler.bind(this)
   }
-  buttonHandler(itemID, evt) {
+  buttonHandler(item, evt) {
     evt.preventDefault();
-    this.props.history.push('/item/' + itemID);
+    //this.props.history.push('/item/' + itemID);
+    this.props.setItemToDetailFunction(item.itemID);
   }
   render() {
     return (
