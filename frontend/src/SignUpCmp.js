@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import common from './common.js';
 
-//const TITLE_FORM = '';
 class SignUpCmp extends Component {
 
     constructor() {
@@ -14,7 +13,8 @@ class SignUpCmp extends Component {
             repassword: '',
             address:'',
             postalcode:'',
-            phonenumber:''
+            phonenumber:'',
+            email: ''
             //contact: { address: '', postalcode: '', phonenumber: '' }
         }
         //this.common = new common();
@@ -25,6 +25,7 @@ class SignUpCmp extends Component {
         this.handleInputPhoneNumber = this.handleInputPhoneNumber.bind(this);
         this.handleInputAddress = this.handleInputAddress.bind(this);
         this.handleInputPostalCode = this.handleInputPostalCode.bind(this);
+        this.handleInputEmail = this.handleInputEmail.bind(this);
 
         this.validateInputs = this.validateInputs.bind(this);
 
@@ -64,13 +65,18 @@ class SignUpCmp extends Component {
         this.setState({postalcode: event.target.value})
     }
 
+    handleInputEmail(event) {
+        event.preventDefault();
+        //this.setState({ contact: {email: event.target.value}})
+        this.setState({email: event.target.value})
+    }
 
     handleSubmitRegister(event) {
         event.preventDefault();
 
         if (this.validateInputs()) {
 
-            let bodyInfo = { username: this.state.username, password: this.state.password, contact: {address: this.state.address, postalcode: this.state.postalcode, phonenumber: this.state.phonenumber, email:'linda@gmail.com'} };
+            let bodyInfo = { username: this.state.username, password: this.state.password, contact: {address: this.state.address, postalcode: this.state.postalcode, phonenumber: this.state.phonenumber, email: this.state.email} };
             fetch('/signUp', {
                 method: 'POST',
                 body: JSON.stringify(bodyInfo)
@@ -79,17 +85,20 @@ class SignUpCmp extends Component {
                     let respBodyParser = JSON.parse(respBody);
 
                     //confirm sucess to app main
-                    //this.props.setSignUpSuccessFunction(respBodyParser.success);
+                    this.props.setSignUpSuccessFunction(respBodyParser.success);
 
                     //update state and rerender
                     this.setState({ signup: respBodyParser.success, message: respBodyParser.message})
-                })*/
 
-            this.setState({ message: 'sign up success' })
+                    //show messge
+                    this.setState({ message: 'Sign up success' })
+                })
+
+            
 
         } else {
             //confirm fail to app main
-            //this.props.setSignUpSuccessFunction(false);
+            this.props.setSignUpSuccessFunction(false);
 
             //update state and rerender
             this.setState({ message: 'field validation error' })
@@ -104,8 +113,9 @@ class SignUpCmp extends Component {
         let valAddress = !this.isStringEmpty(this.state.address);
         let valPhoneNumber = !this.isStringEmpty(this.state.phonenumber);
         let valPostalCode = !this.isStringEmpty(this.state.postalcode);
+        let valEmail = !this.isStringEmpty(this.state.email);
 
-        if (valUsername && valPassword && valRePassword && valAddress && valPhoneNumber && valPostalCode) {
+        if (valUsername && valPassword && valRePassword && valAddress && valPhoneNumber && valPostalCode && valEmail) {
             if (this.state.password === this.state.repassword) {
                 return true;
             }            
@@ -135,6 +145,7 @@ class SignUpCmp extends Component {
                                 <div><h4>Contact:</h4></div>
                                 <div>
                                     <div>Phone number:<input type="text" value={this.state.phonenumber} onChange={this.handleInputPhoneNumber} /></div>
+                                    <div>Email:<input type="text" value={this.state.email} onChange={this.handleInputEmail} /></div>
                                     <div>Address:<input type="text" value={this.state.address} onChange={this.handleInputAddress} /></div>
                                     <div>Postal code:<input type="text" value={this.state.postalcode} onChange={this.handleInputPostalCode} /></div>
                                 </div>

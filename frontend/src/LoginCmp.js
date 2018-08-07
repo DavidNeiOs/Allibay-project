@@ -30,7 +30,7 @@ class LoginCmp extends Component {
         if (!this.isStringEmpty(this.state.username) && !this.isStringEmpty(this.state.password)) {
 
             let bodyInfo = { username: this.state.username, password: this.state.password };
-            /*fetch('/login', {
+            fetch('/login', {
                 method: 'POST',
                 mode: 'same-origin',
                 credentials: 'include',
@@ -42,12 +42,15 @@ class LoginCmp extends Component {
                     let userIDRet = respBodyParser.userID;
 
                     //sending login confirmation to main app
-                    this.props.setLoginSuccessFunction(successRet, userIDRet);
+                    this.props.setLoginSuccessFunction(successRet, userIDRet, this.state.username);
 
                     //update state and rerender
                     this.setState({ login: successRet, userID: userIDRet })
-                })*/
-                this.setState({ message: 'login success' })
+
+                    //show the message
+                    this.setState({ message: 'login success' });
+                })
+                
 
         } else {
             this.setState({ message: 'validation error' })
