@@ -41,8 +41,8 @@ app.get('/findItemById', (req,res) => {
 
 app.post('/login', (req,res)=> {
     let loginCredentials = JSON.parse(req.body.toString());
-    let username = loginCredentials.username
-    let password = loginCredentials.password
+    let username = loginCredentials.username;
+    let password = loginCredentials.password;
     // verifiy user login credentials
     if (getUserInfoFromFile(loginCredentials)) {    
         //register session 
@@ -50,11 +50,28 @@ app.post('/login', (req,res)=> {
         serverState.sessions.push({ username: username, token: token });
         //send cookie and response
         res.cookie('userCookie', token);
-        res.send("true"); //true token
-    } else {
-        res.send("false"); //false
-    }
+        let userId = "";
+        let userFile = fs.readFileSync("./backend/userData.json").toString();
+        if (userFile != null && userFile !== undefined) {
+            let newArray = userFile.split('\n');
 
+            newArray.forEach(e => {
+                if (e !== undefined && e !== null && e !== "") {
+                    let usrObject = JSON.parse(e);
+                    if (usrObject.username === loginCredentials.username
+                        && usrObject.password === sha256(loginCredentials.password)) {
+                            userId = usrObject.userId;
+                    }
+                }
+            })
+        }
+        let successLoginResp = JSON.stringify({success:true,sessionID:token,userID:userId})
+        res.send(successLoginResp); //true token
+    } else {
+        let wrongLoginResp = JSON.stringify({success:false,reason:"invalid username or password"})
+        res.send(wrongLoginResp);    
+    }
+    console.log(serverState.sessions)
 })
 
 app.post('/signUp', (req,res)=> {
@@ -67,11 +84,24 @@ app.post('/signUp', (req,res)=> {
         //hash user password
         let hashPwd = sha256(userCredentials.password);
         userCredentials.password=hashPwd;
-        //if not, add user data to json data file
-        fs.appendFile('./userData.txt', JSON.stringify(userCredentials + '\n'));
-        //generate responseBody&send it to frontend
-        let resBody = {success:true,userId:userId};
-        res.send(JSON.stringify(resBody));
+        let contactInfo = userCredentials.contact
+        if (contactInfo === null || contactInfo === undefined || contactInfo === "") {
+            //check if there is any contact info has been entered
+            let noCont = {succes:false,reason:"misssing contact info"};
+            res.send(JSON.stringify(noCont));
+        } else if (
+            //check if there is ALL contact info has been entered
+            contactInfo.address === "" || contactInfo.postalcode === "" ||
+            contactInfo.phonenumber === "" || contactInfo.email === "" ) {
+            let missCont = {succes:false,reason:"please fill out all contact info"};
+            res.send(JSON.stringify(missCont));
+        } else {
+            //if not, add user data to json data file
+            fs.appendFileSync('./backend/userData.json', JSON.stringify(userCredentials) + '\n');
+            //generate responseBody&send it to frontend
+            let resBody = {success:true,userId:userId};
+            res.send(JSON.stringify(resBody));
+        }
     } else {
         //if yes, send error object
         let errObj = {succes:false,reason:"user already exists"};
@@ -82,24 +112,53 @@ app.post('/signUp', (req,res)=> {
 app.post('/sellItem', (req,res) => {
     let saleData = JSON.parse(req.body.toString());
     //create item object and add data to json data file
-    let newItem = {
-        itemBlurb : saleData.itemBlurb,
-        price : saleData.itemPrice,
-        picture : saleData.image,
-        sellerId : saleData.userId,
-        stock : saleData.stock,
-        state : saleData.state,
-        itemId : Math.floor(Math.random()*100000),
-        category : saleData.category,
+    if (saleData.itemBlurb === "") {
+        res.send(JSON.stringify({success:false,reason:"missing description to item"}))
+    } else if (saleData.itemPrice === "") {
+        res.send(JSON.stringify({success:false,reason:"missing price to item"}))
+    } else if (saleData.image === "") {
+        res.send(JSON.stringify({success:false,reason:"missing description to item"}))
+    } else if (saleData.userId === "") {
+        res.send(JSON.stringify({success:false,reason:"missing userId to item"}))
+    } else if (saleData.stock === "") {
+        res.send(JSON.stringify({success:false,reason:"missing stock to item"}))
+    } else if (saleData.state === "") {
+        res.send(JSON.stringify({success:false,reason:"missing state to item"}))
+    } else if (saleData.category === "") {
+        res.send(JSON.stringify({success:false,reason:"missing category to item"}))
+    } else {
+        let newItem = {
+            itemBlurb : saleData.itemBlurb,
+            price : saleData.itemPrice,
+            picture : saleData.image,
+            sellerId : saleData.userId,
+            stock : saleData.stock,
+            state : saleData.state,
+            itemId : Math.floor(Math.random()*100000),
+            category : saleData.category,
+        }
+        
+        fs.appendFileSync('./backend/itemsData.json', JSON.stringify(newItem) + '\n')
+        //respond
+        let saleItemResp = JSON.stringify({success:true,sellerId:newItem.sellerId,itemId:newItem.itemId})
+        res.send(saleItemResp);
     }
-    fs.appendFileSync('./itemsData.js', JSON.stringify(newItem + '\n'))
-    //respond
-    newItem.filter()
 })
 
+app.get('/findItemById', (req,res) => {
+    let search = req.query.itemID;
+    let itemsList = fs.readFileSync('./backend/itemsData.json').toString().split('\n').filter(x => x !== "").map(x => JSON.parse(x));
+    let filteredItems = itemsList.filter(itemObj => itemObj.itemId == search)
+    if (filteredItems.length>0) {
+        let respFiltItem = JSON.stringify({success:true,itemFound:filteredItems[0]})
+        res.send(respFiltItem)
+    } else {
+        let respFailFiltItem = JSON.stringify({success:false,reason:"invalid item id"})
+        res.send(respFailFiltItem)
+    }
+})
 app.get('/init', (req, res) => {
     let sessionID = getSessionIdFromCookie(req);
-
     //verify if is a user has already a valid session
     let ses = serverState.sessions.filter(usr => usr.token === sessionID);
     if (ses.length > 0) {
@@ -119,7 +178,7 @@ function getSessionIdFromCookie(req) {
 function getUserInfoFromFile(mesBody) {
     let existUser = false;
     try {
-        userFile = fs.readFileSync("./userData.json").toString();
+        userFile = fs.readFileSync("./backend/userData.json").toString();
         if (userFile != null && userFile !== undefined) {
             let newArray = userFile.split('\n');
 
@@ -140,4 +199,4 @@ function getUserInfoFromFile(mesBody) {
     return existUser;
 }
 
-app.listen(3000, () => console.log('Listening on port 3000!'))
+app.listen(4000, () => console.log('Listening on port 4000!'))
