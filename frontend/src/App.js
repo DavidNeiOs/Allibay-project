@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import RandomItems from './RandomItemsCmp'
 import { BrowserRouter, Route } from 'react-router-dom'
 import styled, { css } from 'styled-components'
+import './App.css'
 
 // logic Components-----------------------------------------------
 import SignUpCmp from './SignUpCmp.js';
@@ -10,19 +11,6 @@ import SellerItemCmp from './SellerItemCmp.js';
 import PurchaseItemCmp from './PurchaseItemCmp.js';
 import ItemDetailCmp from './ItemDetailCmp.js'
 // end -----------------------------------------------------------
-
-// css Components ------------------------------------------------
-import MainBar from './components/MainBar'
-import Logo from './components/Logo'
-import Label from './components/Label'
-import ShoppingCart from './components/ShoppingCart'
-import Wrapper from './components/Wrapper'
-import Aside from './components/Aside'
-import SearchForm from './components/SearchForm'
-import Link from './components/Link'
-import Button from './components/Button'
-// end ------------------------------------------------------------
-
 class App extends Component {
   constructor() {
     super()
@@ -44,6 +32,7 @@ class App extends Component {
       randomItems: [], // this list contains 10 random items from the items list
       categories: [],
       signUpSuccess: false,
+      loginClicked: false,
       userID: null, //this value chang when the login is success
       userName: '',
       item: null,
@@ -55,6 +44,7 @@ class App extends Component {
     this.renderItem = this.renderItem.bind(this)
     this.setSignUpSuccess = this.setSignUpSuccess.bind(this);
     this.setLoginSuccess = this.setLoginSuccess.bind(this);
+    this.handleLogIn = this.handleLogIn.bind(this)
     this.doLogout = this.doLogout.bind(this);
     this.setItemToDetail = this.setItemToDetail.bind(this);
     this.setItemToCart = this.setItemToCart.bind(this);
@@ -128,6 +118,9 @@ class App extends Component {
   setLoginSuccess(success, userId, username) {
     this.setState({ userID: userId, userName: username })
   }
+  handleLogIn() {
+    this.setState({loginClicked: true})
+  }
 
   setItemToDetail(itemID) {
     let matchingItem = this.state.items.filter(item => item.itemID === itemID);
@@ -143,20 +136,18 @@ class App extends Component {
   doLogout(){
     //TODO: REMOVE THE COOKIE!!!
     let bodyInfo = {username :  this.state.userName} ;
-           fetch('/logout', {
-                method: 'POST',
-                body: JSON.stringify(bodyInfo)
-            }).then(resp => resp.text())
-                .then(respBody => {
-                    let respBodyParser = JSON.parse(respBody);
-
-                    //if logout success
-                    if (respBodyParser.success) {
-
-                      //update state
-                      this.setState({ userID: null, userName:''})  
-                    }                    
-              })
+    fetch('/logout', {
+      method: 'POST',
+      body: JSON.stringify(bodyInfo)
+    }).then(resp => resp.text())
+      .then(respBody => {
+          let respBodyParser = JSON.parse(respBody);
+          //if logout success
+          if (respBodyParser.success) {
+            //update state
+            this.setState({ userID: null, userName:''})  
+          }                    
+      })
 
   }
   
@@ -168,34 +159,43 @@ class App extends Component {
         </div>
         :
         <div className="App">
-          <MainBar>
-            <Logo src={'/Images/logo_small.png'} />
-            <SearchForm />
-            <Label user>{this.state.userName}{this.state.userName !== '' ? (<img  width="20px" height="20px" src={'/Images/Icons/logout.png'} onClick={this.doLogout} />) : (<div></div>)}</Label>
-            <ShoppingCart />
-          </MainBar>
-          <Wrapper>
-            <Aside>
-              <Link>Woman</Link>
-              <Link>Man</Link>
-              <Link>Shoes</Link>
-              <Link>Watches</Link>
-            </Aside>            
-            <RandomItems history={routeProps.history} randomItems={this.state.randomItems} setItemToDetailFunction={this.setItemToDetail} />
-            {!!this.state.signUpSuccess ? (<SignUpCmp show={true} setSignUpSuccessFunction={this.setSignUpSuccess} />) : (<div></div>)}
-            {!!this.state.userID ? (<LoginCmp show={true} setLoginSuccessFunction={this.setLoginSuccess} />) : (<div></div>)}            
-            <ItemDetailCmp item={this.state.item} setItemToCartFunction={this.setItemToCart} />
-            <Aside join>
-              <Logo src={'/Images/Icons/avatar.png'} avatar />
-              <Button register> Sign Up </Button>
-              <Label> Already have an account ?</Label>
-              <Button register> Log In </Button>
-            </Aside>
-          </Wrapper>
+          <div className='mainBar'>
+            <img className='logo' src={'/Images/logo_small.png'}/>
+            <form>
+              <input type='text' className='inputNav' />
+              <input type='image' src={'/Images/Icons/magnifying-glass.png'} className='buttonNav' />
+            </form>
+            <label className='username'> username </label>
+            <img className='shoppingCart' src={'/Images/Icons/shopping-cart.png'} />
+          </div>
+          <div className='wrapper'>
+            <div className='aside'>
+              <a className='links'>Woman</a>
+              <a className='links'>Man</a>
+              <a className='links'>Shoes</a>
+              <a className='links'>Watches</a>
+            </div>
+            <RandomItems history={routeProps.history} randomItems={this.state.randomItems} setItemToDetailFunction={this.setItemToDetail}/>
+            <div className='asideJoin'>
+              <img className='avatar' src={'/Images/Icons/avatar.png'} />
+              <button className='regButton'> Sign Up </button>
+              <label className='quest'> Already have an account ?</label>
+              <button className='regButton' onClick={this.handleLogIn}> Log In </button>
+            </div>
+            
+          </div>
+          { this.state.loginClicked ? 
+            (<div className='li-modal'>
+              <LoginCmp show={this.state.loginClicked} setLoginSuccessFunction={this.setLoginSuccess} />
+            </div>) 
+            : 
+            null
+          }
+          <ItemDetailCmp item={this.state.item} setItemToCartFunction={this.setItemToCart} />
         </div>
     )
   }
-
+  // {!this.state.signUpSuccess ? (<SignUpCmp show={true} setSignUpSuccessFunction={this.setSignUpSuccess} />) : (<div></div>)}
   render() {
     return (
       <BrowserRouter>
@@ -207,35 +207,5 @@ class App extends Component {
     )
   }
 }
-/*class App extends Component { 
-  constructor () {
-    super();
-    this.state = {
-      signUpForm : false,
-      loginForm : false,
-      sellerItemForm: false,
-      purchaseItemForm : false,
-      userCarItems: null
-    }
-    
-  }
-  
-  componentDidMount() {
-    //TODO: dummy data
-    let userCarItemsDummy = {userId : 'user123', items: [{itemId: 'pwd123', quantityToCart:2 }, {itemId: 'pwd124', quantityToCart:3 }, {itemId: 'pwd125', quantityToCart:4 }]}
-    this.setState({ purchaseItemForm: true, userCarItems: userCarItemsDummy});
-  }
 
-  render() {
-    return (
-       <div className="App">
-        <SignUpCmp show={this.state.signUpForm} />
-        <LoginCmp show={this.state.loginForm} />
-        <SellerItemCmp show={this.state.sellerItemForm} />
-        <PurchaseItemCmp show={this.state.purchaseItemForm} userCarItems={this.state.userCarItems} />
-      </div>
-    );
-  }
-}
-*/
 export default App;
