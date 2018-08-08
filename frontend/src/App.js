@@ -235,12 +235,15 @@ class App extends Component {
             </div>
 
           </div>
-          {this.state.loginClicked ?
-            (<div className='li-modal'>
-              <LoginCmp show={this.state.loginClicked} setLoginSuccessFunction={this.setLoginSuccess} />
-            </div>)
-            :
+          { this.state.loginClicked ? 
+            <LoginCmp show={this.state.loginClicked} setLoginSuccessFunction={this.setLoginSuccess} handleClose={this.handleClose} />
+            : 
             null
+          }
+          {!this.state.signUpSuccess ? 
+            (<SignUpCmp show={this.state.signupClicked} setSignUpSuccessFunction={this.setSignUpSuccess} />) 
+            : 
+            (<div></div>)
           }
           <ItemDetailCmp item={this.state.item} setItemToCartFunction={this.setItemToCart} />
           {this.state.showCart ? (<PurchaseItemCmp show={this.state.showCart} userID={this.state.userID} userCartItems={this.state.cartUserItems} userCartItemsDetail={this.state.cartUserItemsDetail} />) : null}
@@ -263,9 +266,3 @@ class App extends Component {
 }
 
 export default App;
-
-//<a className='links' href="#" onclick={this.state.showItemsBought} >Items bought</a>
-
-//<button onClick={this.handleLogIn}>Items bought</button></label>
-
-//<a className='links' href="#" onclick={this.showItemsBought} >Items bought</a></label>
