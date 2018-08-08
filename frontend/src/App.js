@@ -9,8 +9,9 @@ import SignUpCmp from './SignUpCmp.js';
 import LoginCmp from './LoginCmp.js';
 import SellerItemCmp from './SellerItemCmp.js';
 import PurchaseItemCmp from './PurchaseItemCmp.js';
-import ItemDetailCmp from './ItemDetailCmp.js'
+import ItemDetailCmp from './ItemDetailCmp.js';
 // end -----------------------------------------------------------
+
 class App extends Component {
   constructor() {
     super()
@@ -36,7 +37,9 @@ class App extends Component {
       userID: null, //this value chang when the login is success
       userName: '',
       item: null,
-      cartUserItems: []
+      cartUserItems: [],
+      cartUserItemsDetail: [],
+      showCart: false
     }
     this.getItems = this.getItems.bind(this)
     this.getRandomItems = this.getRandomItems.bind(this)
@@ -48,6 +51,7 @@ class App extends Component {
     this.doLogout = this.doLogout.bind(this);
     this.setItemToDetail = this.setItemToDetail.bind(this);
     this.setItemToCart = this.setItemToCart.bind(this);
+    this.showCart = this.showCart.bind(this);
   }
   /*
     This function will load all the items from the server
@@ -151,6 +155,18 @@ class App extends Component {
 
   }
   
+  showCart() {
+    let newArr = JSON.parse(JSON.stringify(this.state.cartUserItems));
+    newArr.forEach(element => {
+        let arrFiltred = this.state.items.filter(e => e.itemID === element.itemID);
+        element.blurb = arrFiltred[0].blurb;
+        element.price = arrFiltred[0].price;
+        element.image = arrFiltred[0].image;
+        element.category = arrFiltred[0].category;
+    });
+    this.setState({showCart : true, cartUserItemsDetail: newArr});
+  }
+
   renderMain(routeProps) {
     return (
       this.state.randomItems.length === 0 ?
@@ -164,9 +180,10 @@ class App extends Component {
             <form>
               <input type='text' className='inputNav' />
               <input type='image' src={'/Images/Icons/magnifying-glass.png'} className='buttonNav' />
-            </form>
-            <label className='username'> username </label>
-            <img className='shoppingCart' src={'/Images/Icons/shopping-cart.png'} />
+            </form>            
+            <label className='username'>{this.state.userName}{this.state.userName !== '' ? (<img  width="20px" height="20px" src={'/Images/Icons/logout.png'} onClick={this.doLogout} />) : (<div></div>)}</label>
+            <label>&nbsp;&nbsp;&nbsp;</label>
+            <label className='username'><img className='shoppingCart' src={'/Images/Icons/shopping-cart.png'} onClick={this.showCart} />{this.state.cartUserItems.length}</label>            
           </div>
           <div className='wrapper'>
             <div className='aside'>
@@ -192,6 +209,7 @@ class App extends Component {
             null
           }
           <ItemDetailCmp item={this.state.item} setItemToCartFunction={this.setItemToCart} />
+          {this.state.showCart ? (<PurchaseItemCmp show={this.state.showCart} userID={this.state.userID} userCartItems={this.state.cartUserItems} userCartItemsDetail={this.state.cartUserItemsDetail} />) : null}
         </div>
     )
   }
