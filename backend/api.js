@@ -292,9 +292,13 @@ function getSessionIdFromCookie(req) {
 function getUserInfoFromFile(mesBody) {
     let existUser = false;
     try {
+<<<<<<< HEAD
         userFile = fs.readFileSync("./backend/userData.json").toString();
+=======
+        userFile = fs.readFileSync("./userData.txt").toString();
+>>>>>>> 755efe2a7d10b986f023d32abf2d5631212ea61e
         if (userFile != null && userFile !== undefined) {
-            let newArray = userFile.split('\n');
+            let newArray = JSON.parse(userFile).split('\n');
 
             newArray.forEach(e => {
                 if (e !== undefined && e !== null && e !== "") {
