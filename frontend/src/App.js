@@ -28,18 +28,18 @@ class App extends Component {
     super()
     this.state = {
       items: [
-      { itemID: 1 , blurb: 'shoes nike', description: 'lorem ipsum ...', price: 500, category: 'shoes', image:'tennisNikeRed.png'},
-      { itemID: 2 , blurb: 'shoes nike', description: 'lorem ipsum ...', price: 800, category: 'shoes', image:'tennisNikeRed.png'},
-      { itemID: 3 , blurb: 'shoes nike', description: 'lorem ipsum ...', price: 800, category: 'shoes', image:'tennisNikeRed.png'},
-      { itemID: 4 , blurb: 'shoes nike', description: 'lorem ipsum ...', price: 700, category: 'shoes', image:'tennisNikeRed.png'},
-      { itemID: 5, blurb: 'shoes nike', description: 'lorem ipsum ...', price: 600, category: 'shoes', image:'tennisNikeRed.png'},
-      { itemID: 6 , blurb: 'shoes nike', description: 'lorem ipsum ...', price: 800, category: 'shoes', image:'tennisNikeRed.png'},
-      { itemID: 7 , blurb: 'shoes nike', description: 'lorem ipsum ...', price: 800, category: 'shoes', image:'tennisNikeRed.png'},
-      { itemID: 8 , blurb: 'shoes nike', description: 'lorem ipsum ...', price: 800, category: 'shoes', image:'tennisNikeRed.png'},
-      { itemID: 9 , blurb: 'shoes nike', description: 'lorem ipsum ...', price: 800, category: 'shoes', image:'tennisNikeRed.png'},
-      { itemID: 10 , blurb: 'shoes nike', description: 'lorem ipsum ...', price: 800, category: 'shoes', image:'tennisNikeRed.png'},
-      { itemID: 11 , blurb: 'shoes nike', description: 'lorem ipsum ...', price: 800, category: 'shoes', image:'tennisNikeRed.png'},
-      { itemID: 12 , blurb: 'shoes nike', description: 'lorem ipsum ...', price: 800, category: 'shoes', image:'tennisNikeRed.png' }
+      { itemID: 1 , blurb: 'shoes nike 1', description: 'lorem ipsum ...', price: 500, category: 'shoes', image:'tennisNikeRed.png'},
+      { itemID: 2 , blurb: 'shoes nike 2', description: 'lorem ipsum ...', price: 800, category: 'shoes', image:'tennisNikeRed.png'},
+      { itemID: 3 , blurb: 'shoes nike 3', description: 'lorem ipsum ...', price: 800, category: 'shoes', image:'tennisNikeRed.png'},
+      { itemID: 4 , blurb: 'shoes nike 4', description: 'lorem ipsum ...', price: 700, category: 'shoes', image:'tennisNikeRed.png'},
+      { itemID: 5, blurb: 'shoes nike 5', description: 'lorem ipsum ...', price: 600, category: 'shoes', image:'tennisNikeRed.png'},
+      { itemID: 6 , blurb: 'shoes nike 6', description: 'lorem ipsum ...', price: 800, category: 'shoes', image:'tennisNikeRed.png'},
+      { itemID: 7 , blurb: 'shoes nike 7', description: 'lorem ipsum ...', price: 800, category: 'shoes', image:'tennisNikeRed.png'},
+      { itemID: 8 , blurb: 'shoes nike 8', description: 'lorem ipsum ...', price: 800, category: 'shoes', image:'tennisNikeRed.png'},
+      { itemID: 9 , blurb: 'shoes nike 9', description: 'lorem ipsum ...', price: 800, category: 'shoes', image:'tennisNikeRed.png'},
+      { itemID: 10 , blurb: 'shoes nike 10', description: 'lorem ipsum ...', price: 800, category: 'shoes', image:'tennisNikeRed.png'},
+      { itemID: 11 , blurb: 'shoes nike 11', description: 'lorem ipsum ...', price: 800, category: 'shoes', image:'tennisNikeRed.png'},
+      { itemID: 12 , blurb: 'shoes nike 12', description: 'lorem ipsum ...', price: 800, category: 'shoes', image:'tennisNikeRed.png' }
       ],  // this list contains all the items
       randomItems: [], // this list contains 10 random items from the items list
       categories: [],
