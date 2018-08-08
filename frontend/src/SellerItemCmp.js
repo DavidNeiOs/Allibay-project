@@ -33,7 +33,7 @@ class SellerItemCmp extends Component {
 
     componentDidMount() {
         //TODO: call the endpoint with the information
-        this.setState({ categoryArr: ['Clothes', 'Shoes', 'Technology'], countryArr: ['Canada', 'Colombia', 'Francia'] });
+        this.setState({ categoryArr: ['shoes', 'sunglasses', 'watches', 'technology', 'health', 'home', 'office', 'men', 'women', 'kids'], countryArr: ['Canada', 'Colombia', 'Francia'] });
     }
 
     handleInputCountry(event) {
@@ -197,7 +197,7 @@ class SellerItemCmp extends Component {
                                             <div><label>Category:{this.state.category}</label>
                                             </div>
                                             <div><label><b>{this.state.itemName}</b></label></div>
-                                            <div><label><img height="50px" width="50px" src={this.state.itemImage.name} /></label></div>
+                                            <div><label><img height="50px" width="50px" src="/Images/items/technology/laptopDell.png" /></label></div>
                                             <div><label>Detail:{this.state.itemDetail}</label></div>
                                             <div><label>Price:{this.state.itemPrice}</label></div>
                                             <div><label>Stock:{this.state.itemCantity}</label></div>
