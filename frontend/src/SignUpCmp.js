@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import common from './common.js';
+import './App.css'
 
 class SignUpCmp extends Component {
 
@@ -11,9 +12,9 @@ class SignUpCmp extends Component {
             username: '',
             password: '',
             repassword: '',
-            address:'',
-            postalcode:'',
-            phonenumber:'',
+            address: '',
+            postalcode: '',
+            phonenumber: '',
             email: ''
             //contact: { address: '', postalcode: '', phonenumber: '' }
         }
@@ -33,16 +34,16 @@ class SignUpCmp extends Component {
         this.isStringEmpty = this.isStringEmpty.bind(this);
     }
 
-    handleInputUsername(event) {   
-        event.preventDefault();     
+    handleInputUsername(event) {
+        event.preventDefault();
         this.setState({ username: event.target.value })
     }
 
     handleInputPassword(event) {
-        event.preventDefault();        
+        event.preventDefault();
         this.setState({ password: event.target.value })
     }
-    handleInputRePassword(event) {        
+    handleInputRePassword(event) {
         event.preventDefault();
         this.setState({ repassword: event.target.value })
     }
@@ -50,25 +51,25 @@ class SignUpCmp extends Component {
     handleInputPhoneNumber(event) {
         event.preventDefault();
         //this.setState({ contact: {phonenumber: event.target.value}})
-        this.setState({ phonenumber: event.target.value})
+        this.setState({ phonenumber: event.target.value })
     }
 
     handleInputAddress(event) {
         event.preventDefault();
         //this.setState({ contact: {address: event.target.value}})
-        this.setState({address: event.target.value})
+        this.setState({ address: event.target.value })
     }
 
     handleInputPostalCode(event) {
         event.preventDefault();
         //this.setState({ contact: {postalcode: event.target.value}})
-        this.setState({postalcode: event.target.value})
+        this.setState({ postalcode: event.target.value })
     }
 
     handleInputEmail(event) {
         event.preventDefault();
         //this.setState({ contact: {email: event.target.value}})
-        this.setState({email: event.target.value})
+        this.setState({ email: event.target.value })
     }
 
     handleSubmitRegister(event) {
@@ -76,7 +77,7 @@ class SignUpCmp extends Component {
 
         if (this.validateInputs()) {
 
-            let bodyInfo = { username: this.state.username, password: this.state.password, contact: {address: this.state.address, postalcode: this.state.postalcode, phonenumber: this.state.phonenumber, email: this.state.email} };
+            let bodyInfo = { username: this.state.username, password: this.state.password, contact: { address: this.state.address, postalcode: this.state.postalcode, phonenumber: this.state.phonenumber, email: this.state.email } };
             fetch('/signUp', {
                 method: 'POST',
                 body: JSON.stringify(bodyInfo)
@@ -88,13 +89,13 @@ class SignUpCmp extends Component {
                     this.props.setSignUpSuccessFunction(respBodyParser.success);
 
                     //update state and rerender
-                    this.setState({ signup: respBodyParser.success, message: respBodyParser.message})
+                    this.setState({ signup: respBodyParser.success, message: respBodyParser.message })
 
                     //show messge
                     this.setState({ message: 'Sign up success' })
                 })
 
-            
+
 
         } else {
             //confirm fail to app main
@@ -118,11 +119,11 @@ class SignUpCmp extends Component {
         if (valUsername && valPassword && valRePassword && valAddress && valPhoneNumber && valPostalCode && valEmail) {
             if (this.state.password === this.state.repassword) {
                 return true;
-            }            
-        } 
+            }
+        }
         return false;
     }
- 
+
     isStringEmpty(str) {
         return (str === null || str === undefined || str === "" || str.trim().length === 0);
     }
@@ -130,30 +131,32 @@ class SignUpCmp extends Component {
     render() {
         return (
             this.props.show ?
-                <div>
-                    <div>
-                        <form onSubmit={this.handleSubmitRegister}>
-                            <div>
-                                <div><h4>Account:</h4></div>
-                                <div>
-                                    <div>Username:<input type="text" value={this.state.inputUsername} onChange={this.handleInputUsername} /></div>
-                                    <div>Password:<input type="password" value={this.state.inputPassword} onChange={this.handleInputPassword} /></div>
-                                    <div>Re-Password:<input type="password" value={this.state.inputRePassword} onChange={this.handleInputRePassword} /></div>
-                                </div>
+                <div className='bg-modal'>
+                    <div className='modal-content-su'>
+                        <form className='signUpForm' onSubmit={this.handleSubmitRegister}>
+                            <div className='signUpCont'>
+                                <h4>Account:</h4>
+                                <div className ='signUpLabel'>Username:</div>
+                                <input type="text" value={this.state.inputUsername} onChange={this.handleInputUsername} />
+                                <div className ='signUpLabel'>Password:</div>
+                                <input type="password" value={this.state.inputPassword} onChange={this.handleInputPassword} />
+                                <div className ='signUpLabel'>Re-Password:</div>
+                                <input type="password" value={this.state.inputRePassword} onChange={this.handleInputRePassword} />
                             </div>
-                            <div>
-                                <div><h4>Contact:</h4></div>
-                                <div>
-                                    <div>Phone number:<input type="text" value={this.state.phonenumber} onChange={this.handleInputPhoneNumber} /></div>
-                                    <div>Email:<input type="text" value={this.state.email} onChange={this.handleInputEmail} /></div>
-                                    <div>Address:<input type="text" value={this.state.address} onChange={this.handleInputAddress} /></div>
-                                    <div>Postal code:<input type="text" value={this.state.postalcode} onChange={this.handleInputPostalCode} /></div>
-                                </div>
+                            <div className='signUpCont'>
+                                <h4>Contact:</h4>
+                                <div className='signUpLabel'>Phone number:</div>
+                                <input type="text" value={this.state.phonenumber} onChange={this.handleInputPhoneNumber} />
+                                <div className='signUpLabel'>Email:</div>
+                                <input type="text" value={this.state.email} onChange={this.handleInputEmail} />
+                                <div className='signUpLabel'>Address:</div>
+                                <input type="text" value={this.state.address} onChange={this.handleInputAddress} />
+                                <div className='signUpLabel'>Postal code:</div>
+                                <input type="text" value={this.state.postalcode} onChange={this.handleInputPostalCode} />
                             </div>
-                            <div><input className="buttonForm" type="submit" value="Send" /></div>
+                            <input className="buttonForm signUpB" type="submit" value="Join" />
                         </form>
                     </div>
-                    <div>{this.state.message}</div>
                 </div> : null
         )
     }

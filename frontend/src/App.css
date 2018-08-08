@@ -59,6 +59,7 @@
   right: 0;
   transform: rotate(45deg);
   cursor: pointer;
+  color: red;
 }
 .logInLabel {
   margin-top: 1vh;
@@ -158,7 +159,7 @@
     height: 3vh;
 }
 
-.li-modal {
+.bg-modal {
   width: 100%;
   height: 100%;
   background-color: rgba(0,0,0,0.8);
@@ -173,4 +174,40 @@
 }
 .logout {
   cursor: pointer;
+}
+
+.modal-content-su {
+  position: relative;
+  top : 20%;
+  left: 40%;
+  width: 20%;
+  height: 45%;
+  background-color: black;
+}
+.signUpForm {
+  display: flex;
+  flex-direction: column;
+  color: white;
+  position: relative;
+}
+.signUpCont {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  position: relative;
+  display: inline-block;
+}
+.signUpLabel {
+  max-width: 40%;
+  margin-left: 22%;
+  justify-content: left;
+}
+.signUpB {
+  margin: 2% auto;
+  background-color: silver;
+  color: darkblue;
+  border-radius: 10vw;
+}
+.signUpB:hover{
+  opacity: 0.8;
 }

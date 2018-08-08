@@ -33,6 +33,7 @@ class App extends Component {
       categories: [],
       signUpSuccess: false,
       loginClicked: false,
+      signupClicked: false,
       userID: null, //this value chang when the login is success
       userName: '',
       item: null,
@@ -48,6 +49,9 @@ class App extends Component {
     this.doLogout = this.doLogout.bind(this);
     this.setItemToDetail = this.setItemToDetail.bind(this);
     this.setItemToCart = this.setItemToCart.bind(this);
+    this.handleClose = this.handleClose.bind(this)
+    this.handleSignUp = this.handleSignUp.bind(this)
+    
   }
   /*
     This function will load all the items from the server
@@ -121,6 +125,9 @@ class App extends Component {
   handleLogIn() {
     this.setState({loginClicked: true})
   }
+  handleSignUp() {
+    this.setState({signupClicked: true})
+  }
 
   setItemToDetail(itemID) {
     let matchingItem = this.state.items.filter(item => item.itemID === itemID);
@@ -150,6 +157,10 @@ class App extends Component {
       })
 
   }
+
+  handleClose() {
+    this.setState({loginClicked: false})
+  }
   
   renderMain(routeProps) {
     return (
@@ -178,18 +189,21 @@ class App extends Component {
             <RandomItems history={routeProps.history} randomItems={this.state.randomItems} setItemToDetailFunction={this.setItemToDetail}/>
             <div className='asideJoin'>
               <img className='avatar' src={'/Images/Icons/avatar.png'} />
-              <button className='regButton'> Sign Up </button>
+              <button className='regButton' onClick={this.handleSignUp}> Sign Up </button>
               <label className='quest'> Already have an account ?</label>
               <button className='regButton' onClick={this.handleLogIn}> Log In </button>
             </div>
             
           </div>
           { this.state.loginClicked ? 
-            (<div className='li-modal'>
-              <LoginCmp show={this.state.loginClicked} setLoginSuccessFunction={this.setLoginSuccess} />
-            </div>) 
+            <LoginCmp show={this.state.loginClicked} setLoginSuccessFunction={this.setLoginSuccess} handleClose={this.handleClose} />
             : 
             null
+          }
+          {!this.state.signUpSuccess ? 
+            (<SignUpCmp show={this.state.signupClicked} setSignUpSuccessFunction={this.setSignUpSuccess} />) 
+            : 
+            (<div></div>)
           }
           <ItemDetailCmp item={this.state.item} setItemToCartFunction={this.setItemToCart} />
         </div>
