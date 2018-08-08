@@ -171,6 +171,9 @@
   position: relative;
   top : 20%;
   left: 40%;
+  background-color: black;
+  max-width: 20%;
+  height: 30%;
 }
 .logout {
   cursor: pointer;
@@ -211,3 +214,47 @@
 .signUpB:hover{
   opacity: 0.8;
 }
+.buttonShoppingCart {
+  background: url(/Images/Icons/shopping-cart.png) no-repeat;
+  cursor:pointer;
+  border: none;
+}
+
+/*TABLE STYLE*/
+.rTable {
+  display: block;
+  width: 100%;
+}
+.rTableHeading, .rTableBody, .rTableFoot, .rTableRow{
+  clear: both;
+}
+.rTableHead, .rTableFoot{
+  background-color: #DDD;
+  font-weight: bold;
+}
+.rTableCell, .rTableHead {
+  border: 1px solid #999999;
+  float: left;
+  height: 70px;
+  overflow: hidden;
+  padding: 3px 1.8%;
+  width: 10%;
+}
+.rTable:after {
+  visibility: hidden;
+  display: block;
+  font-size: 0;
+  content: " ";
+  clear: both;
+  height: 0;
+}
+
+/*
+.rTable { display: table; }
+.rTableRow { display: table-row; }
+.rTableHeading { display: table-header-group; }
+.rTableBody { display: table-row-group; }
+.rTableFoot { display: table-footer-group; }
+.rTableCell, .rTableHead { display: table-cell; }
+
+*/
