@@ -180,7 +180,7 @@ class SellerItemCmp extends Component {
                                         </label></div>
                                         <div><label>Detail:<textarea value={this.state.itemDetail} onChange={this.handleInputDetail} /></label></div>
                                         <div><label>Price:<input type="number" value={this.state.itemPrice} onChange={this.handleInputPrice} /></label></div>
-                                        <div><label>Cantity:<input type="number" value={this.state.itemCantity} onChange={this.handleInputCantity} /></label></div>
+                                        <div><label>Stock:<input type="number" value={this.state.itemCantity} onChange={this.handleInputCantity} /></label></div>
                                         <div><input type="submit" value="Preview" onClick={this.handlePreview} /></div>
                                         <div>{this.state.message}</div>
                                     </div>
@@ -196,13 +196,11 @@ class SellerItemCmp extends Component {
                                             </div>
                                             <div><label>Category:{this.state.category}</label>
                                             </div>
-                                            <div><label>Item name:{this.state.itemName}</label></div>
-                                            <div><label>Item image:
-                                        <img height="50px" width="50px" src={this.state.itemImage.name} />
-                                            </label></div>
+                                            <div><label><b>{this.state.itemName}</b></label></div>
+                                            <div><label><img height="50px" width="50px" src={this.state.itemImage.name} /></label></div>
                                             <div><label>Detail:{this.state.itemDetail}</label></div>
                                             <div><label>Price:{this.state.itemPrice}</label></div>
-                                            <div><label>Cantity:{this.state.itemCantity}</label></div>
+                                            <div><label>Stock:{this.state.itemCantity}</label></div>
                                             <div><input type="submit" value="Send" /></div>
                                         </div>
                                     ) : (<div></div>)}

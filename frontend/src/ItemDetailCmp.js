@@ -24,6 +24,7 @@ class ItemDetailCmp extends Component {
             this.props.item ?
             <div className='bg-modal'>
                 <div className='modal-content-item'>
+                <div className='close' onClick={this.props.handleItemClose}>+</div>
                     <div className='item-title'>ITEM DETAIL</div>
                     <img className='item-img' src={"/Images/items/" + this.props.item[0].category+"/"+this.props.item[0].image} height="200px" width="200px" />
                     <div className='item-details'>

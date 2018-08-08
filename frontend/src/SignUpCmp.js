@@ -135,6 +135,7 @@ class SignUpCmp extends Component {
                     <div className='modal-content-su'>
                         <form className='signUpForm' onSubmit={this.handleSubmitRegister}>
                             <div className='signUpCont'>
+                                <div className='close' onClick={this.props.signUpClose}>+</div>
                                 <h4>Account:</h4>
                                 <div className ='signUpLabel'>Username:</div>
                                 <input type="text" value={this.state.inputUsername} onChange={this.handleInputUsername} />
