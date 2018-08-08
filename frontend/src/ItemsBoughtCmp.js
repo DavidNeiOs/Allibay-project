@@ -1,17 +1,32 @@
 import React, { Component } from 'react';
-//import ReactTable from "react-table";
-//import ItemDetailCmp from './ItemDetailCmp';
 
-class PurchaseItemCmp extends Component {
-
+class ItemsBought extends Component {
     constructor() {
         super();
-        this.state = {message : ''};
+        this.state={itemsBought:[], date: new Date().toLocaleString()};
         this.getCarItems = this.getCarItems.bind(this);
         this.getTotalPurchase = this.getTotalPurchase.bind(this);
-        this.handleSubmitPurchase = this.handleSubmitPurchase.bind(this);
     }
 
+    /*componentDidMount() {
+        //call the end-point to get the items
+        let bodyInfo = { userID: this.props.userID};
+            fetch('/itemsBought', {
+                method: 'POST',
+                mode: 'same-origin',
+                credentials: 'include',
+                body: JSON.stringify(bodyInfo)
+            }).then(resp => resp.text())
+                .then(respBody => {
+                    let respBodyParser = JSON.parse(respBody);                                        
+                    //update state 
+                    if (respBodyParser.success) {
+                        this.setState({itemsBought: respBodyParser.items })                    
+                    }                                         
+                })
+      }*/
+
+    //TODO: CHANGE THIS METHODS WHEN THE ENDPOINT WORK, TO USE this.state.itemsBought INSTEAD OF this.props.userCartItemsDetail
     getCarItems() {
         return this.props.userCartItemsDetail.map(item => (
             <div className="rTableRow">
@@ -32,36 +47,12 @@ class PurchaseItemCmp extends Component {
         return total;
     }
 
-    handleSubmitPurchase(event) {
-        event.preventDefault();
-
-            let bodyInfo = { userID: this.props.userID, cart: this.props.userCartItems};
-            fetch('/purchaseItem', {
-                method: 'POST',
-                mode: 'same-origin',
-                credentials: 'include',
-                body: JSON.stringify(bodyInfo)
-            }).then(resp => resp.text())
-                .then(respBody => {
-                    let respBodyParser = JSON.parse(respBody);                    
-
-                    //sending login confirmation to main app
-                    //this.props.setLoginSuccessFunction(successRet, userIDRet, this.state.username);
-
-                    //update state show the message
-                    let msg = respBodyParser.success ? 'Transaction success #34565' : 'Transaction fail';
-                    this.setState({ message: msg })                    
-                })
-                
-    }
-
     render() {
         return (
             this.props.show ?
                 <div>
-                    <form onSubmit={this.handleSubmitPurchase}>
                         <div>
-                            <h2>Shoping cart</h2>
+                            <h2>Items bought</h2>
                             <div className="rTable">
                                 <div className="rTableRow">
                                     <div className="rTableHead"><strong>Item</strong></div>
@@ -71,16 +62,14 @@ class PurchaseItemCmp extends Component {
                                 </div>
                                 {this.getCarItems()}
                                 <div className="rTableRow">
-                                    <div className="rTableHead">&nbsp;</div>
-                                    <div className="rTableHead">&nbsp;</div>
+                                    <div className="rTableHead">Date:</div>
+                                    <div className="rTableHead">{this.state.date}</div>
                                     <div className="rTableHead"><strong>Total: CDN$</strong></div>
                                     <div className="rTableHead"><strong>{this.getTotalPurchase()}</strong></div>
                                 </div>
                             </div>
-                            <input type="submit" value="Purchase" />
                             <label>{this.state.message}</label>
                         </div>
-                    </form>
                 </div>
                 :
                 null
@@ -88,4 +77,5 @@ class PurchaseItemCmp extends Component {
     }
 }
 
-export default PurchaseItemCmp;
+
+export default ItemsBought;
