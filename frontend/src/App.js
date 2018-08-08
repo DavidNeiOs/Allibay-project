@@ -149,7 +149,7 @@ class App extends Component {
           //if logout success
           if (respBodyParser.success) {
             //update state
-            this.setState({ userID: null, userName:''})  
+            this.setState({ userID: null, userName:'', cartUserItems: [], cartUserItemsDetail:[]})  
           }                    
       })
 
