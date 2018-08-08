@@ -8,21 +8,48 @@
 }
 
 .logo {
+  order: 1;
   width: 3.5vw;
   height: 6vh;
 }
-
+.navForm {
+  order: 1  ;
+  position: relative;
+  margin-left: 20vw;
+}
 .inputNav {
-    width: 20vw;
-    height: 2vh;
-    margin-top: 0.5vh;
-    margin-left: 30vw;
+    width: 30vw;
+    height: 1vh;
 }
 .buttonNav {
+  margin-top: 0.5vh;
   width: 1.5vw;
   height: 2vh;
+  padding: 0.5vh;
+}
+.infoNav {
+  order: 1;
+  display: flex;
+  width: 20%;
+  margin-left: 15vw;
   margin-top: 1vh;
 }
+.username {
+  margin-top: 1.5vh;
+  margin-left: 10vw;
+  color: black;
+}
+.shoppingCart {
+  width: 1.5vw;
+  height: 2vh;
+  cursor: pointer;
+}
+.lateB {
+  order: 1;
+  height: 3vh;
+  margin-top: 1vh;
+}
+
 .avatar {
     width: 5vw;
     height: 5vh;
@@ -30,19 +57,6 @@
     border-radius: 100%;
     box-shadow: 0.1vw 0.3vh lightblue;
 }
-
-.shoppingCart {
-    width: 1.5vw;
-    height: 2vh;
-    margin-top: 1.5vh;
-}
-
-.username {
-    margin-top: 1.5vh;
-    margin-left: 10vw;
-    color: black;
-}
-
 .logInForm {
     width: 20vw;
     height: 30vh;
@@ -220,34 +234,6 @@
   border: none;
 }
 
-/*TABLE STYLE*/
-.rTable {
-  display: block;
-  width: 100%;
-}
-.rTableHeading, .rTableBody, .rTableFoot, .rTableRow{
-  clear: both;
-}
-.rTableHead, .rTableFoot{
-  background-color: #DDD;
-  font-weight: bold;
-}
-.rTableCell, .rTableHead {
-  border: 1px solid #999999;
-  float: left;
-  height: 70px;
-  overflow: hidden;
-  padding: 3px 1.8%;
-  width: 10%;
-}
-.rTable:after {
-  visibility: hidden;
-  display: block;
-  font-size: 0;
-  content: " ";
-  clear: both;
-  height: 0;
-}
 /* ITEM DETAIL */
 .modal-content-item {
   position: relative;
@@ -280,4 +266,49 @@
 }
 .item-details > * {
   margin-top: 2%;
+}
+
+.modal-content-sc {
+  background-color: antiquewhite;
+  max-width: 50%;
+  height: 40%;
+  text-align: center;
+  position: relative;
+  top: 20%;
+  left: 20%;
+}
+.sc-title {
+  padding-top: 3vh;
+}
+/*TABLE STYLE*/
+.rTable {
+  display: block;
+  width: 100%;
+  margin-left: 20%;
+}
+.rTableHeading, .rTableBody, .rTableFoot, .rTableRow{
+  clear: both;
+}
+.rTableHead, .rTableFoot{
+  background-color: #DDD;
+  font-weight: bold;
+}
+.rTableCell, .rTableHead {
+  border: 1px solid #999999;
+  float: left;
+  height: 70px;
+  overflow: hidden;
+  padding: 3px 1.8%;
+  width: 10%;
+}
+.rTable:after {
+  visibility: hidden;
+  display: block;
+  font-size: 0;
+  content: " ";
+  clear: both;
+  height: 0;
+}
+.sc-button {
+  margin-top: 1vh;
 }

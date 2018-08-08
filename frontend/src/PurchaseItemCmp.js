@@ -58,29 +58,31 @@ class PurchaseItemCmp extends Component {
     render() {
         return (
             this.props.show ?
-                <div>
-                    <form onSubmit={this.handleSubmitPurchase}>
-                        <div>
-                            <h2>Shoping cart</h2>
-                            <div className="rTable">
-                                <div className="rTableRow">
-                                    <div className="rTableHead"><strong>Item</strong></div>
-                                    <div className="rTableHead"><strong>Price</strong></div>
-                                    <div className="rTableHead"><strong>Quantity</strong></div>
-                                    <div className="rTableHead"><strong>Subtotal</strong></div>
+                <div className='bg-modal'>
+                    <div className='modal-content-sc'>
+                        <form onSubmit={this.handleSubmitPurchase}>
+                            <div>
+                                <h2 className='sc-title'>Shoping cart</h2>
+                                <div className="rTable">
+                                    <div className="rTableRow">
+                                        <div className="rTableHead"><strong>Item</strong></div>
+                                        <div className="rTableHead"><strong>Price</strong></div>
+                                        <div className="rTableHead"><strong>Quantity</strong></div>
+                                        <div className="rTableHead"><strong>Subtotal</strong></div>
+                                    </div>
+                                    {this.getCarItems()}
+                                    <div className="rTableRow">
+                                        <div className="rTableHead">&nbsp;</div>
+                                        <div className="rTableHead">&nbsp;</div>
+                                        <div className="rTableHead"><strong>Total: CDN$</strong></div>
+                                        <div className="rTableHead"><strong>{this.getTotalPurchase()}</strong></div>
+                                    </div>
                                 </div>
-                                {this.getCarItems()}
-                                <div className="rTableRow">
-                                    <div className="rTableHead">&nbsp;</div>
-                                    <div className="rTableHead">&nbsp;</div>
-                                    <div className="rTableHead"><strong>Total: CDN$</strong></div>
-                                    <div className="rTableHead"><strong>{this.getTotalPurchase()}</strong></div>
-                                </div>
+                                <input className='sc-button' type="submit" value="Purchase" />
+                                <label>{this.state.message}</label>
                             </div>
-                            <input type="submit" value="Purchase" />
-                            <label>{this.state.message}</label>
-                        </div>
-                    </form>
+                        </form>
+                    </div>
                 </div>
                 :
                 null

@@ -3,7 +3,7 @@ import RandomItems from './RandomItemsCmp'
 import { BrowserRouter, Route } from 'react-router-dom'
 import styled, { css } from 'styled-components'
 import './App.css'
-
+import MainBar from './MainBar'
 // logic Components-----------------------------------------------
 import SignUpCmp from './SignUpCmp.js';
 import LoginCmp from './LoginCmp.js';
@@ -11,6 +11,7 @@ import SellerItemCmp from './SellerItemCmp.js';
 import PurchaseItemCmp from './PurchaseItemCmp.js';
 import ItemDetailCmp from './ItemDetailCmp.js';
 import ItemsBoughtCmp from './ItemsBoughtCmp.js';
+import AsideJoin from './AsideJoin';
 // end -----------------------------------------------------------
 
 class App extends Component {
@@ -34,6 +35,7 @@ class App extends Component {
       randomItems: [], // this list contains 10 random items from the items list
       categories: [],
       signUpSuccess: false,
+      logInSucces: false,
       loginClicked: false,
       userID: null, //this value chang when the login is success
       userName: '',
@@ -132,7 +134,7 @@ class App extends Component {
   }
 
   setLoginSuccess(success, userId, username) {
-    this.setState({ userID: userId, userName: username })
+    this.setState({ userID: userId, userName: username, logInSucces: success })
   }
   handleLogIn() {
     this.setState({ loginClicked: true })
@@ -226,17 +228,15 @@ class App extends Component {
         </div>
         :
         <div className="App">
-          <div className='mainBar'>
-            <img className='logo' src={'/Images/logo_small.png'} />
-            <form>
-              <input type='text' className='inputNav' />
-              <input type='image' src={'/Images/Icons/magnifying-glass.png'} className='buttonNav' />
-            </form>
-            <label className='username'>{this.state.userName}{this.state.userName !== '' ? (<img width="20px" height="20px" src={'/Images/Icons/logout.png'} onClick={this.doLogout} />) : (<div></div>)}</label>
-            <label>&nbsp;&nbsp;&nbsp;</label>
-            <label className='username'><img className='shoppingCart' src={'/Images/Icons/shopping-cart.png'} onClick={this.showCart} />{this.state.cartUserItems.length}</label>
-            <label className='username'><button onClick={this.showItemsBought}>Items bought</button><button onClick={this.showSellerItem}>Seller an item</button><button onClick={this.showItemsSold}>Sold history</button></label>            
-          </div>
+          <MainBar 
+            userName={this.state.userName}
+            doLogout={this.doLogout}
+            showCart ={this.showCart}
+            cartUserItems = {this.state.cartUserItems}
+            showItemsBought = {this.showItemsBought}
+            showSellerItem = {this.showSellerItem}
+            showItemsSold = {this.showItemsSold}
+          />
           <div className='wrapper'>
             <div className='aside'>
               <a className='links'>Woman</a>
@@ -245,13 +245,12 @@ class App extends Component {
               <a className='links'>Watches</a>
             </div>
             <RandomItems history={routeProps.history} randomItems={this.state.randomItems} setItemToDetailFunction={this.setItemToDetail} />
-            <div className='asideJoin'>
-              <img className='avatar' src={'/Images/Icons/avatar.png'} />
-              <button className='regButton' onClick={this.handleSignUp}> Sign Up </button>
-              <label className='quest'> Already have an account ?</label>
-              <button className='regButton' onClick={this.handleLogIn}> Log In </button>
-            </div>
-
+            <AsideJoin
+              handleSignUp={this.handleSignUp}
+              handleLogIn={this.handleLogIn}
+              signUpSuccess={this.state.signUpSuccess}
+              logInSucces={this.state.logInSucces}
+            />
           </div>
           { this.state.loginClicked ? 
             <LoginCmp show={this.state.loginClicked} setLoginSuccessFunction={this.setLoginSuccess} handleClose={this.handleClose} />
