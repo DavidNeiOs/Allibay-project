@@ -5,15 +5,13 @@ class LoginCmp extends Component {
 
     constructor() {
         super();
-        this.state = { login: false, username: '', password: '', userID: '' , message: ''};
+        this.state = { login: true, username: '', password: '', userID: '' , message: ''};
         this.handleInputUsername = this.handleInputUsername.bind(this);
         this.handleInputPassword = this.handleInputPassword.bind(this);
         this.handleSubmitLogin = this.handleSubmitLogin.bind(this);
-
         //TODO: borrar
         this.isStringEmpty = this.isStringEmpty.bind(this);
     }
-
     handleInputUsername(event) {
         event.preventDefault();
         this.setState({ username: event.target.value })
@@ -61,13 +59,15 @@ class LoginCmp extends Component {
     isStringEmpty(str) {
         return (str === null || str === undefined || str === "" || str.trim().length === 0);
     }
-
+    
+    
     render() {
         return (
-            this.props.show ?
+            this.state.login ?
+            <div className='bg-modal'>
                 <div className='modal-content'>
-                    <form className='logInForm' onSubmit={this.handleSubmitLogin}>
-                        <div className='close'>+</div>
+                    <form className='signUpForm' onSubmit={this.handleSubmitLogin}>
+                        <div className='close' onClick={this.props.handleClose}>+</div>
                         <h4>Login:</h4>
                         <div className='logInLabel'>Username:</div>
                         <input className='logInInput' type="text" value={this.state.username} onChange={this.handleInputUsername} />
@@ -76,7 +76,8 @@ class LoginCmp extends Component {
                         <input className='logInButton' type="submit" value="Send" />
                     </form>
                     <div>{this.state.message}</div>
-                </div> : null
+                </div>
+              </div> : null
         )
     }
 }

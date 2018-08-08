@@ -59,6 +59,7 @@
   right: 0;
   transform: rotate(45deg);
   cursor: pointer;
+  color: red;
 }
 .logInLabel {
   margin-top: 1vh;
@@ -158,7 +159,7 @@
     height: 3vh;
 }
 
-.li-modal {
+.bg-modal {
   width: 100%;
   height: 100%;
   background-color: rgba(0,0,0,0.8);
@@ -170,7 +171,112 @@
   position: relative;
   top : 20%;
   left: 40%;
+  background-color: black;
+  max-width: 20%;
+  height: 30%;
 }
 .logout {
   cursor: pointer;
+}
+/*SIGN UP FORM */
+.modal-content-su {
+  position: relative;
+  top : 20%;
+  left: 40%;
+  width: 20%;
+  height: 45%;
+  background-color: black;
+}
+.signUpForm {
+  display: flex;
+  flex-direction: column;
+  color: white;
+  position: relative;
+}
+.signUpCont {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  position: relative;
+  display: inline-block;
+}
+.signUpLabel {
+  max-width: 40%;
+  margin-left: 22%;
+  justify-content: left;
+}
+.signUpB {
+  margin: 2% auto;
+  background-color: silver;
+  color: darkblue;
+  border-radius: 10vw;
+}
+.signUpB:hover{
+  opacity: 0.8;
+}
+.buttonShoppingCart {
+  background: url(/Images/Icons/shopping-cart.png) no-repeat;
+  cursor:pointer;
+  border: none;
+}
+
+/*TABLE STYLE*/
+.rTable {
+  display: block;
+  width: 100%;
+}
+.rTableHeading, .rTableBody, .rTableFoot, .rTableRow{
+  clear: both;
+}
+.rTableHead, .rTableFoot{
+  background-color: #DDD;
+  font-weight: bold;
+}
+.rTableCell, .rTableHead {
+  border: 1px solid #999999;
+  float: left;
+  height: 70px;
+  overflow: hidden;
+  padding: 3px 1.8%;
+  width: 10%;
+}
+.rTable:after {
+  visibility: hidden;
+  display: block;
+  font-size: 0;
+  content: " ";
+  clear: both;
+  height: 0;
+}
+/* ITEM DETAIL */
+.modal-content-item {
+  position: relative;
+  top: 20%;
+  left: 20%;
+  width: 50%;
+  height: 30%;
+  background-color: antiquewhite;
+  display: flex;
+
+}
+.item-title {
+  width: 20%;
+  background-color: red;
+  font-size: 1.5em;
+  position: relative;
+  margin-top: 2vh;
+  height: 15%;
+}
+.item-img {
+  float: left;
+  margin-top: 5vh;
+}
+.item-details {
+  display: flex;
+  flex-direction: column;
+  margin-top: 8vh;
+  padding-left: 3vw;
+}
+.item-details > * {
+  margin-top: 2%;
 }

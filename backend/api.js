@@ -119,9 +119,9 @@ function getSessionIdFromCookie(req) {
 function getUserInfoFromFile(mesBody) {
     let existUser = false;
     try {
-        userFile = fs.readFileSync("./userData.json").toString();
+        userFile = fs.readFileSync("./userData.txt").toString();
         if (userFile != null && userFile !== undefined) {
-            let newArray = userFile.split('\n');
+            let newArray = JSON.parse(userFile).split('\n');
 
             newArray.forEach(e => {
                 if (e !== undefined && e !== null && e !== "") {
@@ -140,4 +140,4 @@ function getUserInfoFromFile(mesBody) {
     return existUser;
 }
 
-app.listen(3000, () => console.log('Listening on port 3000!'))
+app.listen(4000, () => console.log('Listening on port 4000!'))
