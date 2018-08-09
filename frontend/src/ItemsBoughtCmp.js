@@ -50,8 +50,10 @@ class ItemsBought extends Component {
     render() {
         return (
             this.props.show ?
-                <div>
+                <div className='bg-modal'>
+                    <div className='modal-content-sc'>
                         <div>
+                        <div className='close' onClick={this.props.closeItemsBought}>+</div>
                             <h2>Items bought</h2>
                             <div className="rTable">
                                 <div className="rTableRow">
@@ -70,6 +72,7 @@ class ItemsBought extends Component {
                             </div>
                             <label>{this.state.message}</label>
                         </div>
+                    </div>
                 </div>
                 :
                 null

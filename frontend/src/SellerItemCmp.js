@@ -26,7 +26,6 @@ class SellerItemCmp extends Component {
         this.handleInputDetail = this.handleInputDetail.bind(this);
         this.handleInputPrice = this.handleInputPrice.bind(this);
         this.handleInputCantity = this.handleInputCantity.bind(this);
-        this.uploadHandler = this.uploadHandler.bind(this);
         this.handleSubmitSave = this.handleSubmitSave.bind(this);
         this.handlePreview = this.handlePreview.bind(this);
     }
@@ -55,11 +54,6 @@ class SellerItemCmp extends Component {
         event.preventDefault();
         let fd = event.target.files[0];
         this.setState({ itemImage: fd })
-    }
-
-    uploadHandler(event) {
-        event.preventDefault();
-        //TODO: some image validations
     }
 
     handleInputDetail(event) {
@@ -117,7 +111,7 @@ class SellerItemCmp extends Component {
                     this.setState({ sellerItem: respBodyParser.success, message: respBodyParser.message})
                 })*/
 
-            this.setState({ message: 'item to sell successfully created' })
+            this.props.closeSellItem();
 
         } else {
             //confirm fail to app main
@@ -150,13 +144,13 @@ class SellerItemCmp extends Component {
     //TODO: DO THE CONDITION IF THE USER IS ALREADDY REGISTER OR NOT
     render() {
         return (this.props.show ?
-            <div>
-                <div>
+            <div className='bg-modal'>
+                <div className='modal-content-sc'>
                     <form onSubmit={this.handleSubmitSave}>
                         <div className="sellerItemContainer">
                             <div>
                                 <div>
-                                    <div><h4>Seller item:</h4></div>
+                                    <div><h4>Sell item:</h4></div>
                                     <div>
                                         <div>
                                             <label>Country:
@@ -176,7 +170,7 @@ class SellerItemCmp extends Component {
                                         <div><label>Item name:<input type="text" value={this.state.itemName} onChange={this.handleInputName} /></label></div>
                                         <div><label>Item image:
                                     <input type="file" onChange={this.handleInputImage} />
-                                            <button onClick={this.uploadHandler}>Upload!</button>
+                                            
                                         </label></div>
                                         <div><label>Detail:<textarea value={this.state.itemDetail} onChange={this.handleInputDetail} /></label></div>
                                         <div><label>Price:<input type="number" value={this.state.itemPrice} onChange={this.handleInputPrice} /></label></div>

@@ -49,7 +49,7 @@ class LoginCmp extends Component {
                     this.setState({ message: 'login success' });
                 })
                 
-
+            this.props.handleClose()
         } else {
             this.setState({ message: 'validation error' })
         }
@@ -67,7 +67,7 @@ class LoginCmp extends Component {
             <div className='bg-modal'>
                 <div className='modal-content'>
                     <form className='signUpForm' onSubmit={this.handleSubmitLogin}>
-                        <div className='close' onClick={this.props.handleClose}>+</div>
+                        <div className='close' onClick={() => this.props.handleClose()}>+</div>
                         <h4>Login:</h4>
                         <div className='logInLabel'>Username:</div>
                         <input className='logInInput' type="text" value={this.state.username} onChange={this.handleInputUsername} />

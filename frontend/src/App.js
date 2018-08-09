@@ -3,7 +3,9 @@ import RandomItems from './RandomItemsCmp'
 import { BrowserRouter, Route, Link } from 'react-router-dom'
 import styled, { css } from 'styled-components'
 import './App.css'
+
 import MainBar from './MainBar'
+import AsideC from './AsideC'
 // logic Components-----------------------------------------------
 import SignUpCmp from './SignUpCmp.js';
 import LoginCmp from './LoginCmp.js';
@@ -28,6 +30,7 @@ class App extends Component {
       userName: '',
       item: null,
       cartUserItems: [],
+      cartItemsNum: 0,
       cartUserItemsDetail: [],
       showCart: false,
       showItemsBought: false,
@@ -36,6 +39,7 @@ class App extends Component {
       signupClicked: false,
       categorySelected: null
     }
+    this.clickhome = this.clickhome.bind(this)
     this.getItems = this.getItems.bind(this)
     this.getRandomItems = this.getRandomItems.bind(this)
     this.renderMain = this.renderMain.bind(this)
@@ -58,6 +62,8 @@ class App extends Component {
     this.filtredItemsByCategory = this.filtredItemsByCategory.bind(this);
     this.returnRandomItemsComponent = this.returnRandomItemsComponent.bind(this);
     this.handleCloseCart = this.handleCloseCart.bind(this)
+    this.closeItemsBought = this.closeItemsBought.bind(this)
+    this.closeSellItem = this.closeSellItem.bind(this)
   }
   /*
     This function will load all the items from the server
@@ -140,7 +146,9 @@ class App extends Component {
   componentDidMount() {
     this.getItems();
   }
-
+  clickhome () {
+    this.setState({randomItems: this.state.items})
+  }
   setSignUpSuccess(success) {
     this.setState({ signUpSuccess: success })
   }
@@ -160,7 +168,7 @@ class App extends Component {
   setItemToCart(item) {
     let carItems = this.state.cartUserItems;
     carItems.push(item);
-    this.setState({ cartUserItems: carItems })
+    this.setState({ cartUserItems: carItems, cartItemsNum: this.state.cartItemsNum + 1 })
   }
 
   doLogout() {
@@ -193,7 +201,7 @@ class App extends Component {
     this.setState({ showCart: true, cartUserItemsDetail: newArr });
   }
   handleCloseCart() {
-    this.setState({showCart: false})
+    this.setState({showCart: false, cartItemsNum: 0})
   }
 
   showItemsBought() {
@@ -209,8 +217,10 @@ class App extends Component {
         element.category = arrFiltred[0].category;
       });
       this.setState({ showItemsBought: true, cartUserItemsDetail: newArr });
-      //this.setState({ showItemsBought: true});
     }
+  }
+  closeItemsBought() {
+    this.setState({ showItemsBought: false});
   }
 
   showSellerItem() {
@@ -235,10 +245,13 @@ class App extends Component {
   handleItemClose() {
     this.setState({ item: null })
   }
-
+  closeSellItem() {
+    this.setState({ showSellerItem: false})
+    window.alert('item succesfully added')
+  }
   renderCategories() {
     return this.state.categories.map(category => (
-      <div onClick={this.filtredItemsByCategory.bind(this, category)}><a className='links' >{category.toUpperCase()}</a></div>
+      <div className='links' onClick={this.filtredItemsByCategory.bind(this, category)}>{category.toUpperCase()}</div>
     ));
   }
 
@@ -262,25 +275,23 @@ class App extends Component {
             userName={this.state.userName}
             doLogout={this.doLogout}
             showCart ={this.showCart}
-            cartUserItems = {this.state.cartUserItems}
-            showItemsBought = {this.showItemsBought}
-            showSellerItem = {this.showSellerItem}
-            showItemsSold = {this.showItemsSold}
+            cartUserItems = {this.state.cartItemsNum}
+            clickHome={this.clickhome}
           />
           <div className='wrapper'>
-            <div className='aside'>
-              {this.renderCategories()}
-            </div>
+            <AsideC renderCategories = {() => this.renderCategories()} />
             {this.returnRandomItemsComponent()}
             <AsideJoin
+              userName = {this.state.userName}
               handleSignUp={this.handleSignUp}
               handleLogIn={this.handleLogIn}
-              signUpSuccess={this.state.signUpSuccess}
-              logInSucces={this.state.logInSucces}
+              showItemsBought = {this.showItemsBought}
+              showSellerItem = {this.showSellerItem}
+              showItemsSold = {this.showItemsSold}
             />
           </div>
           {this.state.loginClicked ?
-            <LoginCmp show={this.state.loginClicked} setLoginSuccessFunction={this.setLoginSuccess} handleClose={this.handleClose} />
+            <LoginCmp show={this.state.loginClicked} setLoginSuccessFunction={this.setLoginSuccess} handleClose={() => this.handleClose()} />
             :
             null
           }
@@ -294,19 +305,37 @@ class App extends Component {
             :
             null
           }
-          {this.state.showCart ?
+          {this.state.showCart && this.state.cartUserItems.length !==0 ?
             (<PurchaseItemCmp
               show={this.state.showCart} 
               userID={this.state.userID} 
               userCartItems={this.state.cartUserItems} 
               userCartItemsDetail={this.state.cartUserItemsDetail}
-              hanldeCloseCart={() => this.handleCloseCart()} 
+              handleCloseCart={() => this.handleCloseCart()} 
               />) 
             : 
             null
           }
-          {this.state.showItemsBought ? (<ItemsBoughtCmp show={this.state.showItemsBought} userID={this.state.userID} userCartItems={this.state.cartUserItems} userCartItemsDetail={this.state.cartUserItemsDetail} />) : null}
-          {this.state.showSellerItem ? (<SellerItemCmp show={this.state.showSellerItem} userID={this.state.userID} />) : null}
+          {this.state.showItemsBought ?
+             (<ItemsBoughtCmp
+                show={this.state.showItemsBought} 
+                userID={this.state.userID} 
+                userCartItems={this.state.cartUserItems} 
+                userCartItemsDetail={this.state.cartUserItemsDetail}
+                closeItemsBought = {this.closeItemsBought}
+              />) 
+              : 
+              null
+          }
+          {this.state.showSellerItem ?
+            (<SellerItemCmp
+              show={this.state.showSellerItem}
+              userID={this.state.userID}
+              closeSellItem={() => this.closeSellItem()}
+            />)
+            : 
+            null
+          }
         </div>
     )
   }
