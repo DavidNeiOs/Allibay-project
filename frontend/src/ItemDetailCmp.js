@@ -17,6 +17,7 @@ class ItemDetailCmp extends Component {
     handleSubmitCart(event) {
         event.preventDefault();
         this.props.setItemToCartFunction({itemID: this.state.itemID, quantity: this.state.quantity});
+        this.props.handleItemClose();
     }
 
     render() {
