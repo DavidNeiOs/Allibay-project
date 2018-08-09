@@ -16,7 +16,7 @@ class RandomItems extends Component {
   render() {
     return (
       <div className='rItems'>
-        {this.props.randomItems.map(item => {
+        {this.props.randomItems? this.props.randomItems.map(item => {
           return (
             <div className='itemC'> 
               <div><img src={"/Images/items/" + item.category+"/"+item.image} height="50px" width="50px" /></div>
@@ -29,7 +29,7 @@ class RandomItems extends Component {
               </button>
             </div>
             )
-          })} 
+          }) : null} 
       </div>
     );
   }

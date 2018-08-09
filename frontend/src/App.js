@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import RandomItems from './RandomItemsCmp'
-import { BrowserRouter, Route } from 'react-router-dom'
+import { BrowserRouter, Route, Link } from 'react-router-dom'
 import styled, { css } from 'styled-components'
 import './App.css'
 import MainBar from './MainBar'
@@ -18,22 +18,9 @@ class App extends Component {
   constructor() {
     super()
     this.state = {
-      items: [
-        { itemID: 1, blurb: 'shoes nike 1', description: 'lorem ipsum ...', price: 500, category: 'shoes', image: 'tennisNikeRed.png' },
-        { itemID: 2, blurb: 'shoes nike 2', description: 'lorem ipsum ...', price: 800, category: 'shoes', image: 'tennisNikeRed.png' },
-        { itemID: 3, blurb: 'shoes nike 3', description: 'lorem ipsum ...', price: 800, category: 'shoes', image: 'tennisNikeRed.png' },
-        { itemID: 4, blurb: 'shoes nike 4', description: 'lorem ipsum ...', price: 700, category: 'shoes', image: 'tennisNikeRed.png' },
-        { itemID: 5, blurb: 'shoes nike 5', description: 'lorem ipsum ...', price: 600, category: 'shoes', image: 'tennisNikeRed.png' },
-        { itemID: 6, blurb: 'shoes nike 6', description: 'lorem ipsum ...', price: 800, category: 'shoes', image: 'tennisNikeRed.png' },
-        { itemID: 7, blurb: 'shoes nike 7', description: 'lorem ipsum ...', price: 800, category: 'shoes', image: 'tennisNikeRed.png' },
-        { itemID: 8, blurb: 'shoes nike 8', description: 'lorem ipsum ...', price: 800, category: 'shoes', image: 'tennisNikeRed.png' },
-        { itemID: 9, blurb: 'shoes nike 9', description: 'lorem ipsum ...', price: 800, category: 'shoes', image: 'tennisNikeRed.png' },
-        { itemID: 10, blurb: 'shoes nike 10', description: 'lorem ipsum ...', price: 800, category: 'shoes', image: 'tennisNikeRed.png' },
-        { itemID: 11, blurb: 'shoes nike 11', description: 'lorem ipsum ...', price: 800, category: 'shoes', image: 'tennisNikeRed.png' },
-        { itemID: 12, blurb: 'shoes nike 12', description: 'lorem ipsum ...', price: 800, category: 'shoes', image: 'tennisNikeRed.png' }
-      ],  // this list contains all the items
+      items: [],  // this list contains all the items            
       randomItems: [], // this list contains 10 random items from the items list
-      categories: [],
+      categories: ['shoes', 'sunglasses', 'watches', 'technology', 'health', 'home', 'office', 'men', 'women', 'kids'],
       signUpSuccess: false,
       logInSucces: false,
       loginClicked: false,
@@ -47,6 +34,7 @@ class App extends Component {
       showSellerItem: false,
       showItemsSold: false,
       signupClicked: false,
+      categorySelected: null
     }
     this.getItems = this.getItems.bind(this)
     this.getRandomItems = this.getRandomItems.bind(this)
@@ -63,34 +51,58 @@ class App extends Component {
     this.showItemsBought = this.showItemsBought.bind(this);
     this.showSellerItem = this.showSellerItem.bind(this);
     this.showItemsSold = this.showItemsSold.bind(this);
-    this.handleSignUp = this.handleSignUp.bind(this)
-    this.handleSignUpClose = this.handleSignUpClose.bind(this)
-    this.handleItemClose = this.handleItemClose.bind(this)
+    this.handleSignUp = this.handleSignUp.bind(this);
+    this.handleSignUpClose = this.handleSignUpClose.bind(this);
+    this.handleItemClose = this.handleItemClose.bind(this);
+    this.renderCategories = this.renderCategories.bind(this);
+    this.filtredItemsByCategory = this.filtredItemsByCategory.bind(this);
+    this.returnRandomItemsComponent = this.returnRandomItemsComponent.bind(this);
+    this.handleCloseCart = this.handleCloseCart.bind(this)
   }
   /*
     This function will load all the items from the server
     it expects as a response the array with all items
   */
   getItems() {
-    /*fetch('/getAllItems')
+    fetch('/getAllItems')
       .then(response => response.text())
       .then(responseBody => {
         let parsedBody = JSON.parse(responseBody);
-        this.setState({items: parsedBody.items});
-        this.getRandomItems();
-      })*/
-    this.getRandomItems();
+        let itemList = parsedBody.items;
+
+        if (this.state.categorySelected !== null) {
+          let itemsFiltred = itemList.filter(item => item.category === this.state.categorySelected);
+          //this.getRandomItems(itemsFiltred); 
+          this.setState({ items:itemList, randomItems: itemsFiltred });     
+        } else {
+          //this.getRandomItems(this.state.items); 
+          this.setState({ items:itemList, randomItems: itemList });
+        }
+
+        /*if (this.state.categorySelected !== null) {
+          let itemsFiltred = this.state.items.filter(item => item.category === this.state.categorySelected);
+          //this.getRandomItems(itemsFiltred); 
+          this.setState({ randomItems: itemsFiltred });     
+        } else {
+          //this.getRandomItems(this.state.items); 
+          this.setState({ randomItems: this.state.items });
+        }*/
+        //this.getRandomItems();
+
+        this.setState({ items: parsedBody.items });
+      })
+    
   }
   /**
    * this function will get ten random items from array of items
    * this items will be store in the state.randomItems
    */
 
-  getRandomItems() {
+  getRandomItems(itemList) {
     let rItems = [] // this will be the array that will be assigned to state.randomItems
     for (let i = 0; i < 8; i++) {
-      let index = Math.floor(Math.random() * this.state.items.length);
-      rItems.push(this.state.items[index]);
+      let index = Math.floor(Math.random() * itemList.length);
+      rItems.push(itemList[index]);
     }
     this.setState({ randomItems: rItems });
   }
@@ -180,6 +192,9 @@ class App extends Component {
     });
     this.setState({ showCart: true, cartUserItemsDetail: newArr });
   }
+  handleCloseCart() {
+    this.setState({showCart: false})
+  }
 
   showItemsBought() {
     if (!(this.state.cartUserItems.length === 0)) {
@@ -199,34 +214,49 @@ class App extends Component {
   }
 
   showSellerItem() {
-    this.setState({ showSellerItem: true});    
+    this.setState({ showSellerItem: true });
   }
 
   showItemsSold() {
-    this.setState({ showItemsSold: true});    
+    this.setState({ showItemsSold: true });
   }
 
   handleClose() {
     this.setState({ loginClicked: false })
   }
 
-  handleSignUp () {
+  handleSignUp() {
     this.setState({ signupClicked: true })
   }
 
-  handleSignUpClose () {
-    this.setState({ signupClicked: false})
+  handleSignUpClose() {
+    this.setState({ signupClicked: false })
   }
-  handleItemClose () {
+  handleItemClose() {
     this.setState({ item: null })
   }
+
+  renderCategories() {
+    return this.state.categories.map(category => (
+      <div onClick={this.filtredItemsByCategory.bind(this, category)}><a className='links' >{category.toUpperCase()}</a></div>
+    ));
+  }
+
+  filtredItemsByCategory(category) {
+    //let itemsFiltred = this.state.items.filter(item => item.category === category);
+    //this.setState({items: itemsFiltred});
+
+      let itemsFiltred = this.state.items.filter(item => item.category === category);
+      //this.getRandomItems(itemsFiltred);      
+      this.setState({ categorySelected: category, randomItems: itemsFiltred});
+  }
+
+  returnRandomItemsComponent() {
+    return (<RandomItems randomItems={this.state.randomItems} setItemToDetailFunction={this.setItemToDetail} />)
+  }
+
   renderMain(routeProps) {
-    return (
-      this.state.randomItems.length === 0 ?
-        <div>
-          loading
-        </div>
-        :
+    return (      
         <div className="App">
           <MainBar 
             userName={this.state.userName}
@@ -239,12 +269,9 @@ class App extends Component {
           />
           <div className='wrapper'>
             <div className='aside'>
-              <a className='links'>Woman</a>
-              <a className='links'>Man</a>
-              <a className='links'>Shoes</a>
-              <a className='links'>Watches</a>
+              {this.renderCategories()}
             </div>
-            <RandomItems history={routeProps.history} randomItems={this.state.randomItems} setItemToDetailFunction={this.setItemToDetail} />
+            {this.returnRandomItemsComponent()}
             <AsideJoin
               handleSignUp={this.handleSignUp}
               handleLogIn={this.handleLogIn}
@@ -252,24 +279,34 @@ class App extends Component {
               logInSucces={this.state.logInSucces}
             />
           </div>
-          { this.state.loginClicked ? 
+          {this.state.loginClicked ?
             <LoginCmp show={this.state.loginClicked} setLoginSuccessFunction={this.setLoginSuccess} handleClose={this.handleClose} />
-            : 
-            null
-          }
-          {!this.state.signUpSuccess ? 
-            (<SignUpCmp show={this.state.signupClicked} setSignUpSuccessFunction={this.setSignUpSuccess} signUpClose={this.handleSignUpClose}/>) 
-            : 
-            (<div></div>)
-          }
-          {this.state.item ?
-            <ItemDetailCmp item={this.state.item} setItemToCartFunction={this.setItemToCart} handleItemClose={this.handleItemClose}/>
             :
             null
           }
-          {this.state.showCart ? (<PurchaseItemCmp show={this.state.showCart} userID={this.state.userID} userCartItems={this.state.cartUserItems} userCartItemsDetail={this.state.cartUserItemsDetail} />) : null}
+          {!this.state.signUpSuccess ?
+            (<SignUpCmp show={this.state.signupClicked} setSignUpSuccessFunction={this.setSignUpSuccess} signUpClose={this.handleSignUpClose} />)
+            :
+            (<div></div>)
+          }
+          {this.state.item ?
+            <ItemDetailCmp item={this.state.item} setItemToCartFunction={this.setItemToCart} handleItemClose={this.handleItemClose} />
+            :
+            null
+          }
+          {this.state.showCart ?
+            (<PurchaseItemCmp
+              show={this.state.showCart} 
+              userID={this.state.userID} 
+              userCartItems={this.state.cartUserItems} 
+              userCartItemsDetail={this.state.cartUserItemsDetail}
+              hanldeCloseCart={() => this.handleCloseCart()} 
+              />) 
+            : 
+            null
+          }
           {this.state.showItemsBought ? (<ItemsBoughtCmp show={this.state.showItemsBought} userID={this.state.userID} userCartItems={this.state.cartUserItems} userCartItemsDetail={this.state.cartUserItemsDetail} />) : null}
-          {this.state.showSellerItem ? (<SellerItemCmp show={this.state.showSellerItem} userID={this.state.userID}  />) : null}
+          {this.state.showSellerItem ? (<SellerItemCmp show={this.state.showSellerItem} userID={this.state.userID} />) : null}
         </div>
     )
   }

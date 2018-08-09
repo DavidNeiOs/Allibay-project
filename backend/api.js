@@ -7,38 +7,12 @@ const fs = require('fs');
 
 app.use(bodyParser.raw({type: '*/*'}))
 
-/*
-let itemsDataState = JSON.parse(fs.readFileSync("./itemsData.json").toString().split('\n'));
-let usersDataState = JSON.parse(fs.readFileSync("./usersData.json").toString().split('\n'));
-let txnDataState = JSON.parse(fs.readFileSync("./txnData.json").toString().split('\n'));
-*/
-
 let serverState = {
     items : [],
     users : [],
     txns : [],
     sessions : []
 }
-
-/*
-app.get('/itemsBought', (req, res) => {
-    let uid = req.query.uid;
-    //to finish & test tuesday morning
-    res.send(JSON.stringify(alibay.getItemsBought(uid)));
-});
-
-app.get('/soldItemsHistory', (req,res) => {
-    let uid = req.query.uid;
-    //to finish & test tuesday morning
-    res.send(JSON.stringify(alibay.allItemsSold(uid)))
-})
-
-app.get('/findItemById', (req,res) => {
-    let itemId = req.query.id;
-    //to finish & test tuesday morning
-    res.send(JSON.stringify(alibay.getItemDescription(itemId)))
-})
-*/
 
 app.post('/login', (req,res)=> {
     let loginCredentials = JSON.parse(req.body.toString());
@@ -113,9 +87,9 @@ app.post('/signUp', (req,res)=> {
 app.post('/sellItem', (req,res) => {
     let saleData = JSON.parse(req.body.toString());
     //create item object and add data to json data file
-    if (saleData.itemBlurb === "") {
+    if (saleData.blurb === "") {
         res.send(JSON.stringify({success:false,reason:"missing description to item"}))
-    } else if (saleData.itemPrice === "") {
+    } else if (saleData.price === "") {
         res.send(JSON.stringify({success:false,reason:"missing price to item"}))
     } else if (saleData.image === "") {
         res.send(JSON.stringify({success:false,reason:"missing description to item"}))
@@ -129,23 +103,23 @@ app.post('/sellItem', (req,res) => {
         res.send(JSON.stringify({success:false,reason:"missing category to item"}))
     } else {
         let newItem = {
-            itemBlurb : saleData.itemBlurb,
-            price : saleData.itemPrice,
+            blurb : saleData.blurb,
+            price : saleData.price,
             picture : saleData.image,
-            sellerId : saleData.userId,
+            description : saleData.description,
+            sellerID : saleData.userID,
             stock : saleData.stock,
             state : saleData.state,
-            itemId : Math.floor(Math.random()*100000),
+            itemID : Math.floor(Math.random()*100000),
             category : saleData.category,
         }
         
         fs.appendFileSync('./backend/itemsData.json', JSON.stringify(newItem) + '\n')
         //respond
-        let saleItemResp = JSON.stringify({success:true,sellerId:newItem.sellerId,itemId:newItem.itemId})
+        let saleItemResp = JSON.stringify({success:true,sellerId:newItem.sellerId,itemID:newItem.itemID})
         res.send(saleItemResp);
     }
 })
-
 
 app.post('/purchaseItem', (req,res) => {
     
@@ -159,19 +133,19 @@ app.post('/purchaseItem', (req,res) => {
     if (sess.length > 0) {
         //if yes, 
         //get itemsIds from cartData and append to itemsPurchList
-        let itemsPurchLst = cartData.map(x => x.itemId)
+        let itemsPurchLst = cartData.map(x => x.itemID)
         //find if items are available by verifying itemsData.json
         let allItems = fs.readFileSync("./backend/itemsData.json").toString().split('\n').filter(x => x !== "").map(x => JSON.parse(x));
         let allItemsBefore = fs.readFileSync("./backend/itemsData.json").toString().split('\n').filter(x => x !== "").map(x => JSON.parse(x));
 
         let beforePurchItems = [];
         for (i=0;i<itemsPurchLst.length;i++) {
-            let itemFound = allItemsBefore.find(x => x.itemId == itemsPurchLst[i])
+            let itemFound = allItemsBefore.find(x => x.itemID == itemsPurchLst[i])
             beforePurchItems.push(itemFound);
         }
         let availItems = [];
         for (i=0;i<itemsPurchLst.length;i++) {
-            let itemFound = allItems.find(x => x.itemId == itemsPurchLst[i])
+            let itemFound = allItems.find(x => x.itemID == itemsPurchLst[i])
             availItems.push(itemFound);
         }
         //if not avail, res.send error items out of stock
@@ -183,7 +157,7 @@ app.post('/purchaseItem', (req,res) => {
         for (i=0;i<cartData.length;i++) {
             var qty = parseInt(cartData[i].qtyPurchased)
             availItems.forEach(x => {
-                if (x.itemId==cartData[i].itemId) {
+                if (x.itemID==cartData[i].itemID) {
                     var itmBought = Object.assign({}, x)
                     x.stock = (parseInt(x.stock)-qty).toString()
                     itmBought.stock = qty.toString()
@@ -224,16 +198,25 @@ app.post('/purchaseItem', (req,res) => {
     //if not, send res.send error session timed out
         res.send(JSON.stringify({success:false,reason:"session timed out"}))
     }
-    
 })
 
 app.get('/itemsBought', (req,res) => {
-
+    let search = req.query.userID;
+    let txnList = fs.readFileSync('./backend/txnData.json').toString().split('\n').filter(x => x !== "").map(x => JSON.parse(x));
+    let filteredTxn = txnList.filter(txn => txn.buyerId == search)
+    if (filteredTxn.length>0) {
+        let lst = filteredTxn.map(x => x.items);
+        var merged = [].concat.apply([],lst)
+        res.send(JSON.stringify({success:true,items:merged}))
+    } else {
+        res.send(JSON.stringify({success:false,reason:"invalid buyer id"}))
+    }
 })
+
 app.get('/findItemById', (req,res) => {
     let search = req.query.itemID;
     let itemsList = fs.readFileSync('./backend/itemsData.json').toString().split('\n').filter(x => x !== "").map(x => JSON.parse(x));
-    let filteredItems = itemsList.filter(itemObj => itemObj.itemId == search)
+    let filteredItems = itemsList.filter(itemObj => itemObj.itemID == search)
     if (filteredItems.length>0) {
         res.send(JSON.stringify({success:true,itemFound:filteredItems[0]}))
     } else {
@@ -292,13 +275,9 @@ function getSessionIdFromCookie(req) {
 function getUserInfoFromFile(mesBody) {
     let existUser = false;
     try {
-<<<<<<< HEAD
         userFile = fs.readFileSync("./backend/userData.json").toString();
-=======
-        userFile = fs.readFileSync("./userData.txt").toString();
->>>>>>> 755efe2a7d10b986f023d32abf2d5631212ea61e
         if (userFile != null && userFile !== undefined) {
-            let newArray = JSON.parse(userFile).split('\n');
+            let newArray = userFile.split('\n');
 
             newArray.forEach(e => {
                 if (e !== undefined && e !== null && e !== "") {

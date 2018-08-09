@@ -271,7 +271,7 @@
 .modal-content-sc {
   background-color: antiquewhite;
   max-width: 50%;
-  height: 40%;
+  height: fit-content;
   text-align: center;
   position: relative;
   top: 20%;

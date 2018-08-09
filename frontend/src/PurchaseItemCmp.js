@@ -50,7 +50,8 @@ class PurchaseItemCmp extends Component {
 
                     //update state show the message
                     let msg = respBodyParser.success ? 'Transaction success #34565' : 'Transaction fail';
-                    this.setState({ message: msg })                    
+                    this.setState({ message: msg });    
+                    this.props.handleCloseCart();         
                 })
                 
     }
