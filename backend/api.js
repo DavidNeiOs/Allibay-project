@@ -25,7 +25,7 @@ app.post('/login', (req,res)=> {
         serverState.sessions.push({ username: username, token: token });
         //send cookie and response
         res.cookie('userCookie', token);
-        let userId = "";
+        let userID = "";
         let userFile = fs.readFileSync("./backend/userData.json").toString();
         if (userFile != null && userFile !== undefined) {
             let newArray = userFile.split('\n');
@@ -35,12 +35,12 @@ app.post('/login', (req,res)=> {
                     let usrObject = JSON.parse(e);
                     if (usrObject.username === loginCredentials.username
                         && usrObject.password === sha256(loginCredentials.password)) {
-                            userId = usrObject.userId;
+                            userID = usrObject.userID;
                     }
                 }
             })
         }
-        let successLoginResp = JSON.stringify({success:true,sessionID:token,userID:userId})
+        let successLoginResp = JSON.stringify({success:true,sessionID:token,userID:userID})
         res.send(successLoginResp); //true token
     } else {
         let wrongLoginResp = JSON.stringify({success:false,reason:"invalid username or password"})
@@ -53,9 +53,9 @@ app.post('/signUp', (req,res)=> {
     let userCredentials = JSON.parse(req.body.toString());
     //verify if user already exists 
     if (!getUserInfoFromFile(userCredentials)) {
-        //generate userId
-        let userId = Math.floor(Math.random()*100000);
-        userCredentials.userId = userId;
+        //generate userID
+        let userID = Math.floor(Math.random()*100000);
+        userCredentials.userID = userID;
         //hash user password
         let hashPwd = sha256(userCredentials.password);
         userCredentials.password=hashPwd;
@@ -74,7 +74,7 @@ app.post('/signUp', (req,res)=> {
             //if not, add user data to json data file
             fs.appendFileSync('./backend/userData.json', JSON.stringify(userCredentials) + '\n');
             //generate responseBody&send it to frontend
-            let resBody = {success:true,userId:userId};
+            let resBody = {success:true,userID:userID};
             res.send(JSON.stringify(resBody));
         }
     } else {
@@ -93,8 +93,8 @@ app.post('/sellItem', (req,res) => {
         res.send(JSON.stringify({success:false,reason:"missing price to item"}))
     } else if (saleData.image === "") {
         res.send(JSON.stringify({success:false,reason:"missing description to item"}))
-    } else if (saleData.userId === "") {
-        res.send(JSON.stringify({success:false,reason:"missing userId to item"}))
+    } else if (saleData.userID === "") {
+        res.send(JSON.stringify({success:false,reason:"missing userID to item"}))
     } else if (saleData.stock === "") {
         res.send(JSON.stringify({success:false,reason:"missing stock to item"}))
     } else if (saleData.state === "") {
@@ -125,9 +125,9 @@ app.post('/purchaseItem', (req,res) => {
     
     let reqBody = JSON.parse(req.body.toString());
     let cartData = reqBody.cart;
-    var buyerId = parseInt(reqBody.userId);
-    //find username with userId in userData.json
-    let buyerData = fs.readFileSync("./backend/userData.json").toString().split('\n').filter(x => x !== "").map(x => JSON.parse(x)).filter(x => x.userId == buyerId);
+    var buyerId = parseInt(reqBody.userID);
+    //find username with userID in userData.json
+    let buyerData = fs.readFileSync("./backend/userData.json").toString().split('\n').filter(x => x !== "").map(x => JSON.parse(x)).filter(x => x.userID == buyerId);
     //verify if user has a session in serverState
     let sess = serverState.sessions.filter(usr => usr.username === buyerData[0].username);
     if (sess.length > 0) {
@@ -155,7 +155,7 @@ app.post('/purchaseItem', (req,res) => {
         let boughtItems = []
         
         for (i=0;i<cartData.length;i++) {
-            var qty = parseInt(cartData[i].qtyPurchased)
+            var qty = parseInt(cartData[i].quantity)
             availItems.forEach(x => {
                 if (x.itemID==cartData[i].itemID) {
                     var itmBought = Object.assign({}, x)
@@ -225,14 +225,10 @@ app.get('/findItemById', (req,res) => {
 })
 
 app.get('/getAllItems', (req,res) => {
-    try {
         let itemsList = fs.readFileSync('./backend/itemsData.json').toString().split('\n').filter(x => x !== "").map(x => JSON.parse(x));
         res.send(JSON.stringify({success:true,items:itemsList}))
-    } catch(err) {
-        res.send(JSON.stringify({success:false,items:"error"}))
     }
-})
-
+)
 app.get('/soldItemsHistory', (req,res) => {
     let search = req.query.userID;
     let itemsList = fs.readFileSync('./backend/itemsData.json').toString().split('\n').filter(x => x !== "").map(x => JSON.parse(x));
