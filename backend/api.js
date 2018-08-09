@@ -225,14 +225,10 @@ app.get('/findItemById', (req,res) => {
 })
 
 app.get('/getAllItems', (req,res) => {
-    try {
         let itemsList = fs.readFileSync('./backend/itemsData.json').toString().split('\n').filter(x => x !== "").map(x => JSON.parse(x));
         res.send(JSON.stringify({success:true,items:itemsList}))
-    } catch(err) {
-        res.send(JSON.stringify({success:false,items:"error"}))
     }
-})
-
+)
 app.get('/soldItemsHistory', (req,res) => {
     let search = req.query.userID;
     let itemsList = fs.readFileSync('./backend/itemsData.json').toString().split('\n').filter(x => x !== "").map(x => JSON.parse(x));
